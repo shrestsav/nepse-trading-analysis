@@ -15,14 +15,14 @@ class TraderController extends Controller
 
     private $excludedStockTypes = ['Mutual Fund', 'Promotor Share', 'Preferred Stock', 'Corporate Debenture'];
 
-    public function getRecommendationsByRsiNAdx()
+    public function getRecommendationsByRsiNAdx($tillDate)
     {
         $this->buyStocks = [];
 
         $stocks = Stock::with([
             'sector',
-            'priceHistory' => function ($query) {
-                $query->where('date', '>', $this->fromDate);
+            'priceHistory' => function ($query) use ($tillDate) {
+                $query->where('date', '>', $this->fromDate)->where('date', '<=', $tillDate);
             }
         ])->get();
         
@@ -64,17 +64,17 @@ class TraderController extends Controller
             }
         }
 
-        return response()->json($this->buyStocks);;
+        return response()->json($this->buyStocks);
     }
 
-    public function getRecommendationsByRsiNMacd()
+    public function getRecommendationsByRsiNMacd($tillDate)
     {
         $recommendations = [];
 
         $stocks = Stock::with([
             'sector',
-            'priceHistory' => function ($query) {
-                $query->where('date', '>', $this->fromDate);
+            'priceHistory' => function ($query) use ($tillDate) {
+                $query->where('date', '>', $this->fromDate)->where('date', '<=', $tillDate);
             }
         ])->get();
 
@@ -115,10 +115,10 @@ class TraderController extends Controller
             }
         }
 
-        return response()->json($recommendations);;
+        return response()->json($recommendations);
     }
 
-    public function getRecommendationsByMaEmaAdx()
+    public function getRecommendationsByMaEmaAdx($tillDate)
     {
         //test
         // $merolagani = new MeroLaganiController;
@@ -128,8 +128,8 @@ class TraderController extends Controller
 
         $stocks = Stock::with([
             'sector',
-            'priceHistory' => function ($query) {
-                $query->where('date', '>', $this->fromDate)->where('date', '<=', '2021-07-08');
+            'priceHistory' => function ($query) use ($tillDate) {
+                $query->where('date', '>', $this->fromDate)->where('date', '<=', $tillDate);
             }
         ])->get();
 
@@ -155,7 +155,7 @@ class TraderController extends Controller
                 $reverse_EMA_low = array_reverse($EMA_low);
                 $reverse_EMA_hlc3 = array_reverse($EMA_hlc3);
                 
-                $close_today = $close[count($close)-1];
+                $close_on_day = $close[count($close)-1];
                 $change_today = $change[0];
                 
                 $ADX_today = $reverse_ADX[0];
@@ -172,26 +172,75 @@ class TraderController extends Controller
 
                 if (
                     $ADX_today > 40 &&
-                    $close_today > $EMA_high_today &&
+                    $close_on_day > $EMA_high_today &&
                     $change_today > 0
                 ) {
-                    $recommendations[$stock->symbol] = [
+                    $recommendations[] = [
                         'stock' => [
                             'company_name' => $stock->company_name,
                             'symbol'       => $stock->symbol,
                         ],
-                        'close_today'      => $close_today,
+                        'close_on_day'     => $close_on_day,
+                        'close_today'      => $stock->priceHistory()->first(),
                         'tillDate'         => $tillDate,
                         'reverse_ADX'      => $reverse_ADX,
                         'reverse_EMA_high' => $reverse_EMA_high,
                         'reverse_EMA_hlc3' => $reverse_EMA_hlc3,
                         'reverse_EMA_low'  => $reverse_EMA_low,
+                        'adx_diff'         => $ADX_today-$ADX_yesterday
                     ];
                 }
             }
         }
 
-        return response()->json($recommendations);;
+        return response()->json($recommendations);
+    }
+
+    public function tenPeriosRSIBelowThirtyStrategy()
+    {
+        $this->buyStocks = [];
+
+        $stocks = Stock::with([
+            'sector',
+            'priceHistory' => function ($query) {
+                $query->where('date', '>', $this->fromDate);
+            }
+        ])->get();
+        
+        foreach ($stocks as $key => $stock) {
+            $priceHistory = $stock->priceHistory;
+            
+            if (count($priceHistory) > 50 && !in_array($stock->sector->name,  $this->excludedStockTypes)) {
+                $high = array_reverse($priceHistory->pluck('max_price')->toArray());
+                $low = array_reverse($priceHistory->pluck('min_price')->toArray());
+                $close = array_reverse($priceHistory->pluck('closing_price')->toArray());
+
+                // $adx = Trader::adx($high, $low, $close, 14);
+                $rsi = Trader::rsi($close, 14);
+
+                // $reverse_adx = array_reverse($adx);
+                $reverse_rsi = array_reverse($rsi);
+
+                // $adx_today = $reverse_adx[0];
+                // $adx_yesterday = $reverse_adx[1];
+
+                $rsi_today = $reverse_rsi[0];
+                $rsi_yesterday = $reverse_rsi[1];
+
+                if ($rsi_today <= 30) {
+                    $this->buyStocks[$stock->symbol] = [
+                        'stock' => [
+                            'company_name' => $stock->company_name,
+                            'symbol' => $stock->symbol,
+                        ],
+                        'close_today' => $stock->priceHistory,
+                        'reverse_RSI' => $reverse_rsi,
+                    ];
+                }
+            }
+        }
+
+        return response()->json($this->buyStocks);
     }
 
     public function heikinAshiCandle()
@@ -225,51 +274,76 @@ class TraderController extends Controller
         return $heikinAshiPriceHistory;
     }
 
-    public function heikinAshiOpen()
-    {
-        
-    }
-
-    public function heikinAshiClose()
-    {
-        
-    }
-
-    public function heikinAshiHigh()
-    {
-
-    }
-    
-    public function heikinAshiLow()
-    {
-
-    }
-
     public function test()
     {
-        $priceHistory = Stock::where('symbol', 'ADBL')->first()->priceHistory;
+        // $priceHistory = Stock::where('symbol', 'ADBL')->first()->priceHistory;
 
-        $real = array_reverse($priceHistory->pluck('closing_price')->toArray());
+        // $real = array_reverse($priceHistory->pluck('closing_price')->toArray());
 
-        $result = Trader::trima($real, 30);
+        // $result = Trader::trima($real, 30);
 
-        $result = Trader::bbands($real, 20, 2.0, 2.0, 0);
+        // $result = Trader::bbands($real, 20, 2.0, 2.0, 0);
 
-        $highBand = array_reverse($result[0]);
-        $midBand = array_reverse($result[1]);
-        $lowBand = array_reverse($result[2]);
+        // $highBand = array_reverse($result[0]);
+        // $midBand = array_reverse($result[1]);
+        // $lowBand = array_reverse($result[2]);
 
-        $result = [
-            [
-                $highBand[0], $midBand[0], $lowBand[0]
-            ],
-            [
-                $highBand[1], $midBand[1], $lowBand[1]
-            ],
-            [
-                $highBand[2], $midBand[2], $lowBand[2]
-            ],
-        ];
-        return $result;
+        // $result = [
+        //     [
+        //         $highBand[0], $midBand[0], $lowBand[0]
+        //     ],
+        //     [
+        //         $highBand[1], $midBand[1], $lowBand[1]
+        //     ],
+        //     [
+        //         $highBand[2], $midBand[2], $lowBand[2]
+        //     ],
+        // ];
+        // return $result;
+
+        $this->buyStocks = [];
+
+        $stocks = Stock::with([
+            'sector',
+            'priceHistory' => function ($query) {
+                $query->where('date', '>', $this->fromDate);
+            }
+        ])->where('symbol','NIL')->get();
+        
+        foreach ($stocks as $key => $stock) {
+            $priceHistory = $stock->priceHistory;
+            
+            if (count($priceHistory) > 50 && !in_array($stock->sector->name,  $this->excludedStockTypes)) {
+                $high = array_reverse($priceHistory->pluck('max_price')->toArray());
+                $low = array_reverse($priceHistory->pluck('min_price')->toArray());
+                $close = array_reverse($priceHistory->pluck('closing_price')->toArray());
+
+                $adx = Trader::adx($high, $low, $close, 14);
+                $rsi = Trader::rsi($close, 14);
+
+                $reverse_adx = array_reverse($adx);
+                $reverse_rsi = array_reverse($rsi);
+
+                $adx_today = $reverse_adx[0];
+                $adx_yesterday = $reverse_adx[1];
+
+                $rsi_today = $reverse_rsi[0];
+                $rsi_yesterday = $reverse_rsi[1];
+
+               
+                $this->buyStocks[$stock->symbol] = [
+                    'stock' => [
+                        'company_name' => $stock->company_name,
+                        'symbol' => $stock->symbol,
+                    ],
+                    'close_today' => $stock->priceHistory()->first(),
+                    'reverse_RSI' => $reverse_rsi,
+                    'reverse_ADX' => $reverse_adx,
+                ];
+                
+            }
+        }
+
+        return response()->json($this->buyStocks);
     }
 }

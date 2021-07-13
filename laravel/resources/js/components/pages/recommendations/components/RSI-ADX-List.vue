@@ -55,12 +55,12 @@ export default {
   components: {},
   props: {
     by_RSI_ADX: { type: Object, required: true },
-    sparkline: { type: Object, required: true },
+    sparkline: { type: Object, required: true }
   },
   data() {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {}
 };
 </script>

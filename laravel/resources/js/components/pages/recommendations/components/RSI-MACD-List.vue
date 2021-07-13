@@ -13,7 +13,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(stock, symbol, i) in by_rsi_macd" :key="i">
+            <tr v-for="(stock, symbol, i) in by_RSI_MACD" :key="i">
               <td :title="stock.stock.company_name">{{ symbol }}</td>
               <td>
                 <v-sparkline :value="stock.RSI" :gradient="sparkline.gradient" :smooth="sparkline.radius || false" :padding="sparkline.padding" :line-width="sparkline.width" :stroke-linecap="sparkline.lineCap" :gradient-direction="sparkline.gradientDirection" :fill="sparkline.fill" :type="sparkline.type" :auto-line-width="sparkline.autoLineWidth" auto-draw>dasdas</v-sparkline>
@@ -54,7 +54,7 @@ export default {
   name: "RsiMacdList",
   components: {},
   props: {
-    by_rsi_macd: { type: Object, required: true },
+    by_RSI_MACD: { type: Object, required: true },
     sparkline: { type: Object, required: true },
   },
   data() {

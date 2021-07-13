@@ -1,37 +1,71 @@
 <template>
   <v-container>
-    <v-overlay :value="!loaded">
-      <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
-    </v-overlay>
-
-    <v-row>
-      <v-app-bar dense dark>
+    <v-row v-bind:class="{'mb-2' : !section.MA_EMA_ADX.display}">
+      <v-app-bar dense>
         <v-toolbar-title>MA - EMA - ADX</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn v-if="section.MA_EMA_ADX.loaded" icon @click="section.MA_EMA_ADX.display = !section.MA_EMA_ADX.display">
+          <v-icon v-if="section.MA_EMA_ADX.display">mdi-unfold-less-horizontal</v-icon>
+          <v-icon v-else>mdi-unfold-more-horizontal</v-icon>
+        </v-btn>
+
+        <v-col v-else cols="10">
+          <v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+        </v-col>
       </v-app-bar>
     </v-row>
 
-    <MA-EMA-ADX-List :by_MA_EMA_ADX="by_MA_EMA_ADX" :sparkline="sparkline"></MA-EMA-ADX-List>
+    <v-slide-y-reverse-transition>
+      <MA-EMA-ADX-List v-show="section.MA_EMA_ADX.display" :by_MA_EMA_ADX="by_MA_EMA_ADX" :sparkline="sparkline"></MA-EMA-ADX-List>
+    </v-slide-y-reverse-transition>
 
-    <v-row>
-      <v-app-bar dense dark>
+    <v-row v-bind:class="{'mb-2' : !section.RSI_ADX.display}">
+      <v-app-bar dense>
         <v-toolbar-title>RSI - ADX</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn v-if="section.RSI_ADX.loaded" icon @click="section.RSI_ADX.display = !section.RSI_ADX.display">
+          <v-icon v-if="section.RSI_ADX.display">mdi-unfold-less-horizontal</v-icon>
+          <v-icon v-else>mdi-unfold-more-horizontal</v-icon>
+        </v-btn>
+
+        <v-col v-else cols="10">
+          <v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+        </v-col>
       </v-app-bar>
     </v-row>
 
-    <RSI-ADX-List v-if="recommendationView == 'list'" :by_RSI_ADX="by_RSI_ADX" :sparkline="sparkline"></RSI-ADX-List>
+    <v-slide-y-reverse-transition>
+      <RSI-ADX-List v-if="recommendationView == 'list' && section.RSI_ADX.display" :by_RSI_ADX="by_RSI_ADX" :sparkline="sparkline"></RSI-ADX-List>
 
-    <RSI-ADX-Tile v-if="recommendationView == 'tile'" :by_RSI_ADX="by_RSI_ADX" :sparkline="sparkline"></RSI-ADX-Tile>
+      <RSI-ADX-Tile v-if="recommendationView == 'tile' && section.RSI_ADX.display" :by_RSI_ADX="by_RSI_ADX" :sparkline="sparkline"></RSI-ADX-Tile>
+    </v-slide-y-reverse-transition>
 
     <v-row>
-      <v-app-bar dense dark>
+      <v-app-bar dense>
         <v-toolbar-title>RSI - MACD</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn v-if="section.RSI_MACD.loaded" icon @click="section.RSI_MACD.display = !section.RSI_MACD.display">
+          <v-icon v-if="section.RSI_MACD.display">mdi-unfold-less-horizontal</v-icon>
+          <v-icon v-else>mdi-unfold-more-horizontal</v-icon>
+        </v-btn>
+
+        <v-col v-else cols="10">
+          <v-progress-linear color="deep-purple accent-4" indeterminate rounded height="6"></v-progress-linear>
+        </v-col>
       </v-app-bar>
     </v-row>
 
-    <RSI-MACD-List v-if="recommendationView == 'list'" :by_rsi_macd="by_rsi_macd" :sparkline="sparkline"></RSI-MACD-List>
+    <v-slide-y-reverse-transition>
+      <RSI-MACD-List v-if="recommendationView == 'list' && section.RSI_MACD.display" :by_RSI_MACD="by_RSI_MACD" :sparkline="sparkline"></RSI-MACD-List>
 
-    <RSI-MACD-Tile v-if="recommendationView == 'tile'" :by_rsi_macd="by_rsi_macd" :sparkline="sparkline"></RSI-MACD-Tile>
-
+      <RSI-MACD-Tile v-if="recommendationView == 'tile' && section.RSI_MACD.display" :by_RSI_MACD="by_RSI_MACD" :sparkline="sparkline"></RSI-MACD-Tile>
+    </v-slide-y-reverse-transition>
   </v-container>
 </template>
 
@@ -42,7 +76,7 @@ const gradients = [
   ["red", "orange", "yellow"],
   ["purple", "violet"],
   ["#00c6ff", "#F0F", "#FF0"],
-  ["#f72047", "#ffd200", "#1feaea"],
+  ["#f72047", "#ffd200", "#1feaea"]
 ];
 import RSIADXList from "./components/RSI-ADX-List";
 import RSIADXTile from "./components/RSI-ADX-Tile";
@@ -56,7 +90,7 @@ export default {
     RSIADXTile,
     RSIMACDList,
     RSIMACDTile,
-    MAEMAADXList,
+    MAEMAADXList
   },
   data() {
     return {
@@ -70,115 +104,177 @@ export default {
         gradients,
         fill: false,
         type: "trend",
-        autoLineWidth: false,
+        autoLineWidth: false
       },
       loaded: false,
       by_RSI_ADX: {},
-      by_rsi_macd: {},
-      by_rsi_macd: {},
-      by_MA_EMA_ADX: {},
+      by_RSI_MACD: {},
+      by_MA_EMA_ADX: [],
+      section: {
+        RSI_ADX: {
+          display: true,
+          loaded: false
+        },
+        RSI_MACD: {
+          display: false,
+          loaded: false
+        },
+        MA_EMA_ADX: {
+          display: false,
+          loaded: false
+        }
+      }
     };
   },
   created() {},
   mounted() {
-    this.getRecommendationsByRsiNAdx();
-    this.getRecommendationsByRsiNMacd();
-    this.getRecommendationsByMaEmaAdx();
+    this.initialize();
+
+    let dateTime = new Date();
+    let hour = dateTime.getHours();
+
+    if (hour >= 11 && hour <= 15)
+      this.$store.commit("changeIsLiveMarket", true);
   },
   methods: {
+    initialize() {
+      this.getRecommendationsByMaEmaAdx();
+      this.getRecommendationsByRsiNAdx();
+      this.getRecommendationsByRsiNMacd();
+    },
     getRecommendationsByMaEmaAdx() {
-      axios.get("/api/get_recommendations_by_ma_ema_adx").then((response) => {
-        let recommendations = response.data;
-        console.log(response);
-        Object.keys(recommendations).forEach((symbol) => {
-          let reverse_ADX = recommendations[symbol].reverse_ADX;
-          let reverse_EMA_high = recommendations[symbol].reverse_EMA_high;
-          let reverse_EMA_hlc3 = recommendations[symbol].reverse_EMA_hlc3;
-          let reverse_EMA_low = recommendations[symbol].reverse_EMA_low;
+      this.by_MA_EMA_ADX = [];
+      this.section.MA_EMA_ADX.loaded = false;
 
-          let ten_reverse_ADX = reverse_ADX.filter((a, i) => {
-            return i >= 0 && i <= 15;
-          });
-          let ten_reverse_EMA_high = reverse_EMA_high.filter((a, i) => {
-            return i >= 0 && i <= 15;
-          });
-          let ten_reverse_EMA_hlc3 = reverse_EMA_hlc3.filter((a, i) => {
-            return i >= 0 && i <= 15;
-          });
-          let ten_reverse_EMA_low = reverse_EMA_low.filter((a, i) => {
-            return i >= 0 && i <= 15;
+      axios
+        .get("/api/get_recommendations_by_ma_ema_adx/" + this.forDateof)
+        .then(response => {
+          let recommendations = response.data;
+          Object.keys(recommendations).forEach(symbol => {
+            let reverse_ADX = recommendations[symbol].reverse_ADX;
+            let reverse_EMA_high = recommendations[symbol].reverse_EMA_high;
+            let reverse_EMA_hlc3 = recommendations[symbol].reverse_EMA_hlc3;
+            let reverse_EMA_low = recommendations[symbol].reverse_EMA_low;
+
+            let ten_reverse_ADX = reverse_ADX.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+            let ten_reverse_EMA_high = reverse_EMA_high.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+            let ten_reverse_EMA_hlc3 = reverse_EMA_hlc3.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+            let ten_reverse_EMA_low = reverse_EMA_low.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+
+            let ADX = ten_reverse_ADX.reverse();
+            let EMA_high = ten_reverse_EMA_high.reverse();
+            let EMA_hlc3 = ten_reverse_EMA_hlc3.reverse();
+            let EMA_low = ten_reverse_EMA_low.reverse();
+
+            recommendations[symbol].ADX = ADX;
+            recommendations[symbol].EMA_high = EMA_high;
+            recommendations[symbol].EMA_hlc3 = EMA_hlc3;
+            recommendations[symbol].EMA_low = EMA_low;
           });
 
-          let ADX = ten_reverse_ADX.reverse();
-          let EMA_high = ten_reverse_EMA_high.reverse();
-          let EMA_hlc3 = ten_reverse_EMA_hlc3.reverse();
-          let EMA_low = ten_reverse_EMA_low.reverse();
+          this.by_MA_EMA_ADX = recommendations.sort(
+            (a, b) => parseFloat(b.adx_diff) - parseFloat(a.adx_diff)
+          );
 
-          recommendations[symbol].ADX = ADX;
-          recommendations[symbol].EMA_high = EMA_high;
-          recommendations[symbol].EMA_hlc3 = EMA_hlc3;
-          recommendations[symbol].EMA_low = EMA_low;
+          this.section.MA_EMA_ADX.loaded = true;
         });
-        this.by_MA_EMA_ADX = recommendations;
-
-        this.loaded = true;
-      });
     },
     getRecommendationsByRsiNAdx() {
-      axios.get("/api/get_recommendations_by_rsi_n_adx").then((response) => {
-        let recommendations = response.data;
+      this.by_RSI_ADX = {};
+      this.section.RSI_ADX.loaded = false;
 
-        Object.keys(recommendations).forEach((symbol) => {
-          let reverse_RSI = recommendations[symbol].reverse_RSI;
-          let reverse_ADX = recommendations[symbol].reverse_ADX;
-          let ten_reverse_RSI = reverse_RSI.filter((a, i) => {
-            return i >= 0 && i <= 15;
+      axios
+        .get("/api/get_recommendations_by_rsi_n_adx/" + this.forDateof)
+        .then(response => {
+          let recommendations = response.data;
+          Object.keys(recommendations).forEach(symbol => {
+            let reverse_RSI = recommendations[symbol].reverse_RSI;
+            let reverse_ADX = recommendations[symbol].reverse_ADX;
+
+            let ten_reverse_RSI = reverse_RSI.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+
+            let ten_reverse_ADX = reverse_ADX.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+
+            recommendations[symbol].reverse_RSI = ten_reverse_RSI.map(n =>
+              n.toFixed(2)
+            );
+            recommendations[symbol].reverse_ADX = ten_reverse_ADX.map(n =>
+              n.toFixed(2)
+            );
+
+            let RSI = ten_reverse_RSI.reverse();
+            let ADX = ten_reverse_ADX.reverse();
+
+            recommendations[symbol].RSI = RSI;
+            recommendations[symbol].ADX = ADX;
           });
-          let ten_reverse_ADX = reverse_ADX.filter((a, i) => {
-            return i >= 0 && i <= 15;
-          });
+          this.by_RSI_ADX = recommendations;
 
-          let RSI = ten_reverse_RSI.reverse();
-          let ADX = ten_reverse_ADX.reverse();
-
-          recommendations[symbol].RSI = RSI;
-          recommendations[symbol].ADX = ADX;
+          this.section.RSI_ADX.loaded = true;
         });
-        this.by_RSI_ADX = recommendations;
-
-        this.loaded = true;
-      });
     },
     getRecommendationsByRsiNMacd() {
-      axios.get("/api/get_recommendations_by_rsi_n_macd").then((response) => {
-        let recommendations = response.data;
+      this.by_RSI_MACD = [];
+      this.section.RSI_MACD.loaded = false;
 
-        Object.keys(recommendations).forEach((symbol) => {
-          let reverse_RSI = recommendations[symbol].reverse_RSI;
-          let reverse_MACD = recommendations[symbol].reverse_MACD;
-          let ten_reverse_RSI = reverse_RSI.filter((a, i) => {
-            return i >= 0 && i <= 15;
+      axios
+        .get("/api/get_recommendations_by_rsi_n_macd/" + this.forDateof)
+        .then(response => {
+          let recommendations = response.data;
+
+          Object.keys(recommendations).forEach(symbol => {
+            let reverse_RSI = recommendations[symbol].reverse_RSI;
+            let reverse_MACD = recommendations[symbol].reverse_MACD;
+            let ten_reverse_RSI = reverse_RSI.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+            let ten_reverse_MACD = reverse_MACD.filter((a, i) => {
+              return i >= 0 && i <= 15;
+            });
+
+            recommendations[symbol].reverse_RSI = ten_reverse_RSI.map(n =>
+              n.toFixed(2)
+            );
+            recommendations[symbol].reverse_MACD = ten_reverse_MACD.map(n =>
+              n.toFixed(2)
+            );
+
+            let RSI = ten_reverse_RSI.reverse();
+            let MACD = ten_reverse_MACD.reverse();
+
+            recommendations[symbol].RSI = RSI;
+            recommendations[symbol].MACD = MACD;
           });
-          let ten_reverse_MACD = reverse_MACD.filter((a, i) => {
-            return i >= 0 && i <= 15;
-          });
+          this.by_RSI_MACD = recommendations;
 
-          let RSI = ten_reverse_RSI.reverse();
-          let MACD = ten_reverse_MACD.reverse();
-
-          recommendations[symbol].RSI = RSI;
-          recommendations[symbol].MACD = MACD;
+          this.section.RSI_MACD.loaded = true;
         });
-        this.by_rsi_macd = recommendations;
-
-        this.loaded = true;
-      });
-    },
+    }
   },
   computed: {
     recommendationView() {
       return this.$store.state.recommendationView;
     },
+    forDateof() {
+      return this.$store.state.forDateof;
+    }
   },
+  watch: {
+    forDateof: function(newDate) {
+      this.initialize();
+    }
+  }
 };
 </script>

@@ -35,12 +35,7 @@
         </tr>
         <tr v-for="(stock, i) in onHoldStocks" :key="stock.id">
           <td>
-            {{
-                            processedStocksList.length +
-                                processingStocks.length +
-                                i +
-                                1
-                        }}
+            {{ processedStocksList.length + processingStocks.length + i + 1 }}
           </td>
           <td>{{ stock.symbol }}</td>
           <td>{{ stock.company_name }}</td>

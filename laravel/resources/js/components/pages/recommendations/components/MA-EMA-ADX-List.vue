@@ -6,17 +6,22 @@
           <thead>
             <tr>
               <th class="text-left">Stock</th>
-              <th class="text-left">Price</th>
+              <th class="text-left">Price on Day</th>
+              <th class="text-left">Price Today</th>
               <th class="text-left">EMA High</th>
               <th class="text-left" width="12%"></th>
               <th class="text-left">ADX</th>
+              <th class="text-left">ADX Signal</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(stock, symbol, i) in by_MA_EMA_ADX" :key="i">
-              <td :title="stock.stock.company_name">{{ symbol }}</td>
+            <tr v-for="(stock, i) in by_MA_EMA_ADX" :key="i">
+              <td :title="stock.stock.company_name">{{ stock.stock.symbol }}</td>
               <td>
-                {{ stock.close_today }}
+                {{ stock.close_on_day }}
+              </td>
+              <td>
+                {{ stock.close_today.closing_price }}
               </td>
               <td>
                 <div class="font-weight-normal caption">
@@ -34,13 +39,19 @@
               <td>
                 <div class="font-weight-normal">
                   {{ stock.reverse_ADX[2] }}
-                  <v-icon v-if="stock.reverse_ADX[2] > stock.reverse_ADX[1]">mdi-arrow-bottom-right-thick</v-icon>
-                  <v-icon v-else>mdi-arrow-top-right-thick</v-icon>
+                  <v-icon>
+                    <template v-if="stock.reverse_ADX[2] > stock.reverse_ADX[1]">mdi-arrow-bottom-right-thick</template>
+                    <template v-else>mdi-arrow-top-right-thick</template>
+                  </v-icon>
                   {{ stock.reverse_ADX[1] }}
-                  <v-icon>mdi-arrow-top-right-thick</v-icon>
+                  <v-icon>
+                    <template v-if="stock.reverse_ADX[1] > stock.reverse_ADX[0]">mdi-arrow-bottom-right-thick</template>
+                    <template v-else>mdi-arrow-top-right-thick</template>
+                  </v-icon>
                   {{ stock.reverse_ADX[0] }}
                 </div>
               </td>
+              <td>{{ stock.adx_diff > 0 ? "+" : "-" }}</td>
             </tr>
           </tbody>
         </template>
@@ -54,13 +65,13 @@ export default {
   name: "RsiAdxList",
   components: {},
   props: {
-    by_MA_EMA_ADX: { type: Object, required: true },
-    sparkline: { type: Object, required: true },
+    by_MA_EMA_ADX: { type: Array, required: true },
+    sparkline: { type: Object, required: true }
   },
   data() {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {}
 };
 </script>

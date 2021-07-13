@@ -1902,24 +1902,58 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {},
   data: function data() {
     return {
-      drawer: false,
-      items: [{
+      miniNavigationDrawer: false,
+      navigations: [{
         path: "/dashboard/daily-recommendation",
-        title: "Recommendations"
+        title: "Recommendations",
+        icon: "trending-up"
       }, {
         path: "/dashboard/sync-price-history",
-        title: "Sync Price History"
-      }]
+        title: "Sync Price History",
+        icon: "cloud-sync"
+      }],
+      displayDatePicker: false
     };
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    if (localStorage.miniNavigationDrawer) {
+      this.miniNavigationDrawer = localStorage.miniNavigationDrawer == "true" ? true : false;
+    }
+  },
   methods: {
     changeRecommendationView: function changeRecommendationView(view) {
       this.$store.commit("changeRecommendationView", view);
+    },
+    changeIsLiveMarket: function changeIsLiveMarket(bool) {
+      this.$store.commit("changeIsLiveMarket", bool || false);
+    },
+    toggleNavigationDrawer: function toggleNavigationDrawer() {
+      this.miniNavigationDrawer = !this.miniNavigationDrawer;
+      localStorage.miniNavigationDrawer = this.miniNavigationDrawer;
     }
   },
   computed: {
@@ -1928,6 +1962,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     routeName: function routeName() {
       return this.$route.name;
+    },
+    isLiveMarket: function isLiveMarket() {
+      return this.$store.state.isLiveMarket;
+    },
+    forDateof: {
+      get: function get() {
+        return this.$store.state.forDateof;
+      },
+      set: function set(selectedDate) {
+        this.$store.commit("changeForDateof", selectedDate);
+      }
     }
   }
 });
@@ -1945,11 +1990,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2182,12 +2222,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RsiAdxList",
   components: {},
   props: {
     by_MA_EMA_ADX: {
-      type: Object,
+      type: Array,
       required: true
     },
     sparkline: {
@@ -2343,6 +2394,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RsiAdxTile",
   components: {},
@@ -2360,7 +2413,15 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   mounted: function mounted() {},
-  methods: {}
+  methods: {
+    companyName: function companyName(_companyName) {
+      if (_companyName.length > 40) {
+        return _companyName.substring(0, 40) + " ...";
+      }
+
+      return _companyName;
+    }
+  }
 });
 
 /***/ }),
@@ -2431,7 +2492,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "RsiMacdList",
   components: {},
   props: {
-    by_rsi_macd: {
+    by_RSI_MACD: {
       type: Object,
       required: true
     },
@@ -2510,7 +2571,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "RsiAdxList",
   components: {},
   props: {
-    by_rsi_macd: {
+    by_RSI_MACD: {
       type: Object,
       required: true
     },
@@ -2523,7 +2584,15 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   mounted: function mounted() {},
-  methods: {}
+  methods: {
+    companyName: function companyName(_companyName) {
+      if (_companyName.length > 40) {
+        return _companyName.substring(0, 40) + " ...";
+      }
+
+      return _companyName;
+    }
+  }
 });
 
 /***/ }),
@@ -2544,8 +2613,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_RSI_MACD_List__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/RSI-MACD-List */ "./resources/js/components/pages/recommendations/components/RSI-MACD-List.vue");
 /* harmony import */ var _components_RSI_MACD_Tile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/RSI-MACD-Tile */ "./resources/js/components/pages/recommendations/components/RSI-MACD-Tile.vue");
 /* harmony import */ var _components_MA_EMA_ADX_List__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/MA-EMA-ADX-List */ "./resources/js/components/pages/recommendations/components/MA-EMA-ADX-List.vue");
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2598,9 +2699,7 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
     MAEMAADXList: _components_MA_EMA_ADX_List__WEBPACK_IMPORTED_MODULE_4__.default
   },
   data: function data() {
-    var _ref;
-
-    return _ref = {
+    return {
       sparkline: {
         width: 2,
         radius: 10,
@@ -2615,22 +2714,44 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
       },
       loaded: false,
       by_RSI_ADX: {},
-      by_rsi_macd: {}
-    }, _defineProperty(_ref, "by_rsi_macd", {}), _defineProperty(_ref, "by_MA_EMA_ADX", {}), _ref;
+      by_RSI_MACD: {},
+      by_MA_EMA_ADX: [],
+      section: {
+        RSI_ADX: {
+          display: true,
+          loaded: false
+        },
+        RSI_MACD: {
+          display: false,
+          loaded: false
+        },
+        MA_EMA_ADX: {
+          display: false,
+          loaded: false
+        }
+      }
+    };
   },
   created: function created() {},
   mounted: function mounted() {
-    this.getRecommendationsByRsiNAdx();
-    this.getRecommendationsByRsiNMacd();
-    this.getRecommendationsByMaEmaAdx();
+    this.initialize();
+    var dateTime = new Date();
+    var hour = dateTime.getHours();
+    if (hour >= 11 && hour <= 15) this.$store.commit("changeIsLiveMarket", true);
   },
   methods: {
+    initialize: function initialize() {
+      this.getRecommendationsByMaEmaAdx();
+      this.getRecommendationsByRsiNAdx();
+      this.getRecommendationsByRsiNMacd();
+    },
     getRecommendationsByMaEmaAdx: function getRecommendationsByMaEmaAdx() {
       var _this = this;
 
-      axios.get("/api/get_recommendations_by_ma_ema_adx").then(function (response) {
+      this.by_MA_EMA_ADX = [];
+      this.section.MA_EMA_ADX.loaded = false;
+      axios.get("/api/get_recommendations_by_ma_ema_adx/" + this.forDateof).then(function (response) {
         var recommendations = response.data;
-        console.log(response);
         Object.keys(recommendations).forEach(function (symbol) {
           var reverse_ADX = recommendations[symbol].reverse_ADX;
           var reverse_EMA_high = recommendations[symbol].reverse_EMA_high;
@@ -2657,14 +2778,18 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
           recommendations[symbol].EMA_hlc3 = EMA_hlc3;
           recommendations[symbol].EMA_low = EMA_low;
         });
-        _this.by_MA_EMA_ADX = recommendations;
-        _this.loaded = true;
+        _this.by_MA_EMA_ADX = recommendations.sort(function (a, b) {
+          return parseFloat(b.adx_diff) - parseFloat(a.adx_diff);
+        });
+        _this.section.MA_EMA_ADX.loaded = true;
       });
     },
     getRecommendationsByRsiNAdx: function getRecommendationsByRsiNAdx() {
       var _this2 = this;
 
-      axios.get("/api/get_recommendations_by_rsi_n_adx").then(function (response) {
+      this.by_RSI_ADX = {};
+      this.section.RSI_ADX.loaded = false;
+      axios.get("/api/get_recommendations_by_rsi_n_adx/" + this.forDateof).then(function (response) {
         var recommendations = response.data;
         Object.keys(recommendations).forEach(function (symbol) {
           var reverse_RSI = recommendations[symbol].reverse_RSI;
@@ -2675,19 +2800,27 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
           var ten_reverse_ADX = reverse_ADX.filter(function (a, i) {
             return i >= 0 && i <= 15;
           });
+          recommendations[symbol].reverse_RSI = ten_reverse_RSI.map(function (n) {
+            return n.toFixed(2);
+          });
+          recommendations[symbol].reverse_ADX = ten_reverse_ADX.map(function (n) {
+            return n.toFixed(2);
+          });
           var RSI = ten_reverse_RSI.reverse();
           var ADX = ten_reverse_ADX.reverse();
           recommendations[symbol].RSI = RSI;
           recommendations[symbol].ADX = ADX;
         });
         _this2.by_RSI_ADX = recommendations;
-        _this2.loaded = true;
+        _this2.section.RSI_ADX.loaded = true;
       });
     },
     getRecommendationsByRsiNMacd: function getRecommendationsByRsiNMacd() {
       var _this3 = this;
 
-      axios.get("/api/get_recommendations_by_rsi_n_macd").then(function (response) {
+      this.by_RSI_MACD = [];
+      this.section.RSI_MACD.loaded = false;
+      axios.get("/api/get_recommendations_by_rsi_n_macd/" + this.forDateof).then(function (response) {
         var recommendations = response.data;
         Object.keys(recommendations).forEach(function (symbol) {
           var reverse_RSI = recommendations[symbol].reverse_RSI;
@@ -2698,19 +2831,33 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
           var ten_reverse_MACD = reverse_MACD.filter(function (a, i) {
             return i >= 0 && i <= 15;
           });
+          recommendations[symbol].reverse_RSI = ten_reverse_RSI.map(function (n) {
+            return n.toFixed(2);
+          });
+          recommendations[symbol].reverse_MACD = ten_reverse_MACD.map(function (n) {
+            return n.toFixed(2);
+          });
           var RSI = ten_reverse_RSI.reverse();
           var MACD = ten_reverse_MACD.reverse();
           recommendations[symbol].RSI = RSI;
           recommendations[symbol].MACD = MACD;
         });
-        _this3.by_rsi_macd = recommendations;
-        _this3.loaded = true;
+        _this3.by_RSI_MACD = recommendations;
+        _this3.section.RSI_MACD.loaded = true;
       });
     }
   },
   computed: {
     recommendationView: function recommendationView() {
       return this.$store.state.recommendationView;
+    },
+    forDateof: function forDateof() {
+      return this.$store.state.forDateof;
+    }
+  },
+  watch: {
+    forDateof: function forDateof(newDate) {
+      this.initialize();
     }
   }
 });
@@ -2849,7 +2996,7 @@ __webpack_require__.r(__webpack_exports__);
       processingStocks: [],
       processedStocks: [],
       onHoldStocks: [],
-      atATime: 3,
+      atATime: 10,
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
@@ -2892,31 +3039,31 @@ __webpack_require__.r(__webpack_exports__);
       this.processing = true;
       this.started = true;
       var startTime = new Date();
-
-      if (type == 3) {
-        axios.get("/api/merolagani/livePrice").then(function (response) {
-          var endTime = new Date();
-          var timeForResponse = endTime - startTime;
-
-          _this2.timeTakenForEachResponse.push(timeForResponse);
-
-          _this2.processedStocks = _this2.processedStocks.concat(_this2.processingStocks);
-          _this2.currentSyncLog.total_synced = _this2.processedStocks.length;
-          _this2.currentSyncLog.total_time = _this2.totalTimeInSeconds;
-          _this2.currentSyncLog.operation_type = "update";
-          axios.post("/api/createSyncLog", _this2.currentSyncLog).then(function (response) {});
-          _this2.processingStocks = [];
-          _this2.processing = false;
-          _this2.dialog = false;
-
-          _this2.getLastSyncLog();
-        });
-        return;
-      }
-
       axios.get("/api/getAllStocks").then(function (response) {
         _this2.stocks = response.data;
       })["finally"](function () {
+        if (type == 3) {
+          _this2.processingStocks = _this2.stocks;
+          axios.get("/api/merolagani/livePrice").then(function (response) {
+            var endTime = new Date();
+            var timeForResponse = endTime - startTime;
+
+            _this2.timeTakenForEachResponse.push(timeForResponse);
+
+            _this2.processedStocks = _this2.processedStocks.concat(_this2.processingStocks);
+            _this2.currentSyncLog.total_synced = _this2.processedStocks.length;
+            _this2.currentSyncLog.total_time = _this2.totalTimeInSeconds;
+            _this2.currentSyncLog.operation_type = "update";
+            axios.post("/api/createSyncLog", _this2.currentSyncLog).then(function (response) {});
+            _this2.processingStocks = [];
+            _this2.processing = false;
+            _this2.dialog = false;
+
+            _this2.getLastSyncLog();
+          });
+          return;
+        }
+
         _this2.startProcessing(0, _this2.atATime);
       });
     },
@@ -3015,7 +3162,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js").default;
-Vue.component('app', __webpack_require__(/*! ./components/app.vue */ "./resources/js/components/app.vue").default);
+Vue.component("app", __webpack_require__(/*! ./components/app.vue */ "./resources/js/components/app.vue").default);
 
 
 
@@ -3028,7 +3175,7 @@ Vue.use((vue_moment__WEBPACK_IMPORTED_MODULE_3___default()));
   }
 }));
 var app = new Vue({
-  el: '#app',
+  el: "#app",
   vuetify: new (vuetify__WEBPACK_IMPORTED_MODULE_2___default())(),
   store: _config_store__WEBPACK_IMPORTED_MODULE_1__.store,
   router: _config_router__WEBPACK_IMPORTED_MODULE_0__.router
@@ -3140,11 +3287,19 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0__.default.use(vuex__WEBPACK_IMPORTED_MODULE_1__.default);
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__.default.Store({
   state: {
-    recommendationView: "list"
+    recommendationView: "list",
+    isLiveMarket: false,
+    forDateof: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
   },
   mutations: {
     changeRecommendationView: function changeRecommendationView(state, recommendationView) {
       state.recommendationView = recommendationView;
+    },
+    changeIsLiveMarket: function changeIsLiveMarket(state, isLiveMarket) {
+      state.isLiveMarket = isLiveMarket;
+    },
+    changeForDateof: function changeForDateof(state, forDateof) {
+      state.forDateof = forDateof;
     }
   },
   actions: {}
@@ -39204,21 +39359,39 @@ var render = function() {
     [
       _c(
         "v-navigation-drawer",
-        { attrs: { app: "", "mini-variant": _vm.drawer } },
+        { attrs: { app: "", "mini-variant": _vm.miniNavigationDrawer } },
         [
           _c(
             "v-list-item",
             [
               _c(
                 "v-list-item-icon",
+                {
+                  staticClass: "navigation-drawer-toggle",
+                  on: { click: _vm.toggleNavigationDrawer }
+                },
                 [
-                  _c("v-app-bar-nav-icon", {
-                    on: {
-                      click: function($event) {
-                        _vm.drawer = !_vm.drawer
-                      }
-                    }
-                  })
+                  _vm.miniNavigationDrawer
+                    ? _c(
+                        "v-icon",
+                        { attrs: { title: "Expand Navigation Drawer" } },
+                        [_vm._v("\n          mdi-forwardburger\n        ")]
+                      )
+                    : _c(
+                        "v-icon",
+                        { attrs: { title: "Contract Navigation Drawer" } },
+                        [_vm._v("\n          mdi-backburger\n        ")]
+                      )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-list-item-content",
+                [
+                  _c("v-list-item-title", [
+                    _c("strong", [_vm._v("TRADING ANALYSIS")])
+                  ])
                 ],
                 1
               )
@@ -39231,14 +39404,19 @@ var render = function() {
           _c(
             "v-list",
             { attrs: { dense: "", nav: "" } },
-            _vm._l(_vm.items, function(item, index) {
+            _vm._l(_vm.navigations, function(item, index) {
               return _c(
                 "v-list-item",
                 { key: index, attrs: { to: item.path } },
                 [
                   _c(
                     "v-list-item-icon",
-                    [_c("v-icon", [_vm._v("mdi-account-circle")])],
+                    {
+                      attrs: {
+                        title: _vm.miniNavigationDrawer ? item.title : ""
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-" + _vm._s(item.icon))])],
                     1
                   ),
                   _vm._v(" "),
@@ -39267,42 +39445,161 @@ var render = function() {
         [
           _vm.routeName == "recommendations"
             ? _c(
-                "v-btn-toggle",
-                {
-                  attrs: {
-                    value: _vm.recommendationView,
-                    shaped: "",
-                    mandatory: ""
-                  }
-                },
+                "v-row",
+                { attrs: { align: "center" } },
                 [
                   _c(
-                    "v-btn",
-                    {
-                      attrs: { value: "tile" },
-                      on: {
-                        click: function($event) {
-                          return _vm.changeRecommendationView("tile")
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-view-module")])],
+                    "v-col",
+                    { attrs: { cols: "1" } },
+                    [
+                      _c(
+                        "v-btn-toggle",
+                        {
+                          attrs: {
+                            value: _vm.recommendationView,
+                            shaped: "",
+                            mandatory: ""
+                          }
+                        },
+                        [
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { value: "tile", elevation: "24" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.changeRecommendationView("tile")
+                                }
+                              }
+                            },
+                            [_c("v-icon", [_vm._v("mdi-view-module")])],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { value: "list", elevation: "24" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.changeRecommendationView("list")
+                                }
+                              }
+                            },
+                            [
+                              _c("v-icon", [
+                                _vm._v("mdi-format-list-bulleted-square")
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
                     1
                   ),
                   _vm._v(" "),
+                  _c("v-spacer"),
+                  _vm._v(" "),
                   _c(
-                    "v-btn",
-                    {
-                      attrs: { value: "list" },
-                      on: {
-                        click: function($event) {
-                          return _vm.changeRecommendationView("list")
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-format-list-bulleted-square")])],
+                    "v-col",
+                    { attrs: { cols: "2" } },
+                    [
+                      _c(
+                        "v-menu",
+                        {
+                          attrs: {
+                            "close-on-content-click": false,
+                            "nudge-right": 40,
+                            transition: "scale-transition",
+                            "offset-y": "",
+                            "min-width": "auto"
+                          },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "activator",
+                                fn: function(ref) {
+                                  var on = ref.on
+                                  var attrs = ref.attrs
+                                  return [
+                                    _c(
+                                      "v-text-field",
+                                      _vm._g(
+                                        _vm._b(
+                                          {
+                                            attrs: {
+                                              "prepend-icon": "mdi-calendar",
+                                              readonly: "",
+                                              "hide-details": ""
+                                            },
+                                            model: {
+                                              value: _vm.forDateof,
+                                              callback: function($$v) {
+                                                _vm.forDateof = $$v
+                                              },
+                                              expression: "forDateof"
+                                            }
+                                          },
+                                          "v-text-field",
+                                          attrs,
+                                          false
+                                        ),
+                                        on
+                                      )
+                                    )
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            false,
+                            4082637177
+                          ),
+                          model: {
+                            value: _vm.displayDatePicker,
+                            callback: function($$v) {
+                              _vm.displayDatePicker = $$v
+                            },
+                            expression: "displayDatePicker"
+                          }
+                        },
+                        [
+                          _vm._v(" "),
+                          _c("v-date-picker", {
+                            attrs: { landscape: "" },
+                            on: {
+                              input: function($event) {
+                                _vm.displayDatePicker = false
+                              }
+                            },
+                            model: {
+                              value: _vm.forDateof,
+                              callback: function($$v) {
+                                _vm.forDateof = $$v
+                              },
+                              expression: "forDateof"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
                     1
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c("v-switch", {
+                    attrs: {
+                      value: "",
+                      "input-value": _vm.isLiveMarket,
+                      label: "Live",
+                      "hide-details": ""
+                    },
+                    on: { change: _vm.changeIsLiveMarket }
+                  })
                 ],
                 1
               )
@@ -39487,7 +39784,7 @@ var render = function() {
           ],
           null,
           false,
-          2488884596
+          1635077598
         )
       })
     : _vm._e()
@@ -39535,7 +39832,11 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("th", { staticClass: "text-left" }, [
-                          _vm._v("Price")
+                          _vm._v("Price on Day")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-left" }, [
+                          _vm._v("Price Today")
                         ]),
                         _vm._v(" "),
                         _c("th", { staticClass: "text-left" }, [
@@ -39547,24 +39848,36 @@ var render = function() {
                           attrs: { width: "12%" }
                         }),
                         _vm._v(" "),
-                        _c("th", { staticClass: "text-left" }, [_vm._v("ADX")])
+                        _c("th", { staticClass: "text-left" }, [_vm._v("ADX")]),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-left" }, [
+                          _vm._v("ADX Signal")
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.by_MA_EMA_ADX, function(stock, symbol, i) {
+                      _vm._l(_vm.by_MA_EMA_ADX, function(stock, i) {
                         return _c("tr", { key: i }, [
                           _c(
                             "td",
                             { attrs: { title: stock.stock.company_name } },
-                            [_vm._v(_vm._s(symbol))]
+                            [_vm._v(_vm._s(stock.stock.symbol))]
                           ),
                           _vm._v(" "),
                           _c("td", [
                             _vm._v(
                               "\n              " +
-                                _vm._s(stock.close_today) +
+                                _vm._s(stock.close_on_day) +
+                                "\n            "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(stock.close_today.closing_price) +
                                 "\n            "
                             )
                           ]),
@@ -39639,21 +39952,29 @@ var render = function() {
                                     _vm._s(stock.reverse_ADX[2]) +
                                     "\n                "
                                 ),
-                                stock.reverse_ADX[2] > stock.reverse_ADX[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
+                                _c(
+                                  "v-icon",
+                                  [
+                                    stock.reverse_ADX[2] > stock.reverse_ADX[1]
+                                      ? [_vm._v("mdi-arrow-bottom-right-thick")]
+                                      : [_vm._v("mdi-arrow-top-right-thick")]
+                                  ],
+                                  2
+                                ),
                                 _vm._v(
                                   "\n                " +
                                     _vm._s(stock.reverse_ADX[1]) +
                                     "\n                "
                                 ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
+                                _c(
+                                  "v-icon",
+                                  [
+                                    stock.reverse_ADX[1] > stock.reverse_ADX[0]
+                                      ? [_vm._v("mdi-arrow-bottom-right-thick")]
+                                      : [_vm._v("mdi-arrow-top-right-thick")]
+                                  ],
+                                  2
+                                ),
                                 _vm._v(
                                   "\n                " +
                                     _vm._s(stock.reverse_ADX[0]) +
@@ -39662,6 +39983,10 @@ var render = function() {
                               ],
                               1
                             )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(stock.adx_diff > 0 ? "+" : "-"))
                           ])
                         ])
                       }),
@@ -39910,7 +40235,7 @@ var render = function() {
     _vm._l(_vm.by_RSI_ADX, function(stock, symbol, i) {
       return _c(
         "v-col",
-        { key: i, attrs: { cols: "12", md: "6", xl: "4" } },
+        { key: i, attrs: { cols: "12", md: "3" } },
         [
           _c(
             "v-card",
@@ -39950,108 +40275,73 @@ var render = function() {
               _vm._v(" "),
               _c("v-card-title", [_vm._v(_vm._s(symbol))]),
               _vm._v(" "),
-              _c("v-card-subtitle", [_vm._v(_vm._s(stock.stock.company_name))]),
-              _vm._v(" "),
               _c(
-                "v-card-text",
+                "v-card-subtitle",
+                { attrs: { title: stock.stock.company_name } },
                 [
-                  _c("div", { staticClass: "font-weight-bold ml-8 mb-2" }, [
-                    _vm._v("Today")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "v-timeline",
-                    { attrs: { "align-top": "", dense: "" } },
-                    [
-                      _c(
-                        "v-timeline-item",
-                        { attrs: { color: "green", small: "" } },
-                        [
-                          _c("div", [
-                            _c(
-                              "div",
-                              { staticClass: "font-weight-normal caption" },
-                              [
-                                _c("strong", [_vm._v("RSI:  ")]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[2]) +
-                                    "\n                "
-                                ),
-                                stock.reverse_RSI[2] > stock.reverse_RSI[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[1]) +
-                                    "\n                "
-                                ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[0]) +
-                                    "\n              "
-                                )
-                              ],
-                              1
-                            )
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-timeline-item",
-                        { attrs: { color: "green", small: "" } },
-                        [
-                          _c("div", [
-                            _c(
-                              "div",
-                              { staticClass: "font-weight-normal caption" },
-                              [
-                                _c("strong", [_vm._v("ADX:  ")]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_ADX[2]) +
-                                    "\n                "
-                                ),
-                                stock.reverse_ADX[2] > stock.reverse_ADX[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_ADX[1]) +
-                                    "\n                "
-                                ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_ADX[0]) +
-                                    "\n              "
-                                )
-                              ],
-                              1
-                            )
-                          ])
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
+                  _c("small", [
+                    _vm._v(_vm._s(_vm.companyName(stock.stock.company_name)))
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("v-card-text", [
+                _c(
+                  "div",
+                  { staticClass: "font-weight-normal caption" },
+                  [
+                    _c("strong", [_vm._v("RSI:  ")]),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(stock.reverse_RSI[2]) +
+                        "\n          "
+                    ),
+                    stock.reverse_RSI[2] > stock.reverse_RSI[1]
+                      ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                      : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(stock.reverse_RSI[1]) +
+                        "\n          "
+                    ),
+                    _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(stock.reverse_RSI[0]) +
+                        "\n        "
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "font-weight-normal caption" },
+                  [
+                    _c("strong", [_vm._v("ADX:  ")]),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(stock.reverse_ADX[2]) +
+                        "\n          "
+                    ),
+                    stock.reverse_ADX[2] > stock.reverse_ADX[1]
+                      ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                      : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(stock.reverse_ADX[1]) +
+                        "\n          "
+                    ),
+                    _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(stock.reverse_ADX[0]) +
+                        "\n        "
+                    )
+                  ],
+                  1
+                )
+              ])
             ],
             1
           )
@@ -40122,7 +40412,7 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.by_rsi_macd, function(stock, symbol, i) {
+                      _vm._l(_vm.by_RSI_MACD, function(stock, symbol, i) {
                         return _c("tr", { key: i }, [
                           _c(
                             "td",
@@ -40293,10 +40583,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-row",
-    _vm._l(_vm.by_rsi_macd, function(stock, symbol, i) {
+    _vm._l(_vm.by_RSI_MACD, function(stock, symbol, i) {
       return _c(
         "v-col",
-        { key: i, attrs: { cols: "12", md: "6", xl: "4" } },
+        { key: i, attrs: { cols: "12", md: "3", xl: "2" } },
         [
           _c(
             "v-card",
@@ -40336,112 +40626,77 @@ var render = function() {
               _vm._v(" "),
               _c("v-card-title", [_vm._v(_vm._s(symbol))]),
               _vm._v(" "),
-              _c("v-card-subtitle", [
-                _vm._v(
-                  "\n        " + _vm._s(stock.stock.company_name) + "\n      "
-                )
-              ]),
-              _vm._v(" "),
               _c(
-                "v-card-text",
+                "v-card-subtitle",
+                { attrs: { title: stock.stock.company_name } },
                 [
-                  _c("div", { staticClass: "font-weight-bold ml-8 mb-2" }, [
-                    _vm._v("Today")
-                  ]),
-                  _vm._v(" "),
+                  _c("small", [
+                    _vm._v(_vm._s(_vm.companyName(stock.stock.company_name)))
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("v-card-text", [
+                _c("div", [
                   _c(
-                    "v-timeline",
-                    { attrs: { "align-top": "", dense: "" } },
+                    "div",
+                    { staticClass: "font-weight-normal caption" },
                     [
-                      _c(
-                        "v-timeline-item",
-                        { attrs: { color: "green", small: "" } },
-                        [
-                          _c("div", [
-                            _c(
-                              "div",
-                              { staticClass: "font-weight-normal caption" },
-                              [
-                                _c("strong", [_vm._v("RSI:  ")]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[2]) +
-                                    "\n                "
-                                ),
-                                stock.reverse_RSI[2] > stock.reverse_RSI[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[1]) +
-                                    "\n                "
-                                ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[0]) +
-                                    "\n              "
-                                )
-                              ],
-                              1
-                            )
-                          ])
-                        ]
+                      _c("strong", [_vm._v("RSI:  ")]),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(stock.reverse_RSI[2]) +
+                          "\n            "
                       ),
-                      _vm._v(" "),
-                      _c(
-                        "v-timeline-item",
-                        { attrs: { color: "green", small: "" } },
-                        [
-                          _c("div", [
-                            _c(
-                              "div",
-                              { staticClass: "font-weight-normal caption" },
-                              [
-                                _c("strong", [_vm._v("MACD:  ")]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_MACD[2]) +
-                                    "\n                "
-                                ),
-                                stock.reverse_MACD[2] > stock.reverse_MACD[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_MACD[1]) +
-                                    "\n                "
-                                ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_MACD[0]) +
-                                    "\n              "
-                                )
-                              ],
-                              1
-                            )
-                          ])
-                        ]
+                      stock.reverse_RSI[2] > stock.reverse_RSI[1]
+                        ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                        : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(stock.reverse_RSI[1]) +
+                          "\n            "
+                      ),
+                      _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(stock.reverse_RSI[0]) +
+                          "\n          "
                       )
                     ],
                     1
                   )
-                ],
-                1
-              )
+                ]),
+                _vm._v(" "),
+                _c("div", [
+                  _c(
+                    "div",
+                    { staticClass: "font-weight-normal caption" },
+                    [
+                      _c("strong", [_vm._v("MACD:  ")]),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(stock.reverse_MACD[2]) +
+                          "\n            "
+                      ),
+                      stock.reverse_MACD[2] > stock.reverse_MACD[1]
+                        ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                        : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(stock.reverse_MACD[1]) +
+                          "\n            "
+                      ),
+                      _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(stock.reverse_MACD[0]) +
+                          "\n          "
+                      )
+                    ],
+                    1
+                  )
+                ])
+              ])
             ],
             1
           )
@@ -40479,12 +40734,146 @@ var render = function() {
     "v-container",
     [
       _c(
-        "v-overlay",
-        { attrs: { value: !_vm.loaded } },
+        "v-row",
+        { class: { "mb-2": !_vm.section.MA_EMA_ADX.display } },
         [
-          _c("v-progress-circular", {
-            attrs: { size: 70, width: 7, color: "purple", indeterminate: "" }
+          _c(
+            "v-app-bar",
+            { attrs: { dense: "" } },
+            [
+              _c("v-toolbar-title", [_vm._v("MA - EMA - ADX")]),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _vm.section.MA_EMA_ADX.loaded
+                ? _c(
+                    "v-btn",
+                    {
+                      attrs: { icon: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.section.MA_EMA_ADX.display = !_vm.section
+                            .MA_EMA_ADX.display
+                        }
+                      }
+                    },
+                    [
+                      _vm.section.MA_EMA_ADX.display
+                        ? _c("v-icon", [_vm._v("mdi-unfold-less-horizontal")])
+                        : _c("v-icon", [_vm._v("mdi-unfold-more-horizontal")])
+                    ],
+                    1
+                  )
+                : _c(
+                    "v-col",
+                    { attrs: { cols: "10" } },
+                    [
+                      _c("v-progress-linear", {
+                        attrs: {
+                          color: "deep-purple accent-4",
+                          indeterminate: "",
+                          rounded: "",
+                          height: "6"
+                        }
+                      })
+                    ],
+                    1
+                  )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-slide-y-reverse-transition",
+        [
+          _c("MA-EMA-ADX-List", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.section.MA_EMA_ADX.display,
+                expression: "section.MA_EMA_ADX.display"
+              }
+            ],
+            attrs: {
+              by_MA_EMA_ADX: _vm.by_MA_EMA_ADX,
+              sparkline: _vm.sparkline
+            }
           })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { class: { "mb-2": !_vm.section.RSI_ADX.display } },
+        [
+          _c(
+            "v-app-bar",
+            { attrs: { dense: "" } },
+            [
+              _c("v-toolbar-title", [_vm._v("RSI - ADX")]),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _vm.section.RSI_ADX.loaded
+                ? _c(
+                    "v-btn",
+                    {
+                      attrs: { icon: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.section.RSI_ADX.display = !_vm.section.RSI_ADX
+                            .display
+                        }
+                      }
+                    },
+                    [
+                      _vm.section.RSI_ADX.display
+                        ? _c("v-icon", [_vm._v("mdi-unfold-less-horizontal")])
+                        : _c("v-icon", [_vm._v("mdi-unfold-more-horizontal")])
+                    ],
+                    1
+                  )
+                : _c(
+                    "v-col",
+                    { attrs: { cols: "10" } },
+                    [
+                      _c("v-progress-linear", {
+                        attrs: {
+                          color: "deep-purple accent-4",
+                          indeterminate: "",
+                          rounded: "",
+                          height: "6"
+                        }
+                      })
+                    ],
+                    1
+                  )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-slide-y-reverse-transition",
+        [
+          _vm.recommendationView == "list" && _vm.section.RSI_ADX.display
+            ? _c("RSI-ADX-List", {
+                attrs: { by_RSI_ADX: _vm.by_RSI_ADX, sparkline: _vm.sparkline }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.recommendationView == "tile" && _vm.section.RSI_ADX.display
+            ? _c("RSI-ADX-Tile", {
+                attrs: { by_RSI_ADX: _vm.by_RSI_ADX, sparkline: _vm.sparkline }
+              })
+            : _vm._e()
         ],
         1
       ),
@@ -40494,67 +40883,76 @@ var render = function() {
         [
           _c(
             "v-app-bar",
-            { attrs: { dense: "", dark: "" } },
-            [_c("v-toolbar-title", [_vm._v("MA - EMA - ADX")])],
+            { attrs: { dense: "" } },
+            [
+              _c("v-toolbar-title", [_vm._v("RSI - MACD")]),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _vm.section.RSI_MACD.loaded
+                ? _c(
+                    "v-btn",
+                    {
+                      attrs: { icon: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.section.RSI_MACD.display = !_vm.section.RSI_MACD
+                            .display
+                        }
+                      }
+                    },
+                    [
+                      _vm.section.RSI_MACD.display
+                        ? _c("v-icon", [_vm._v("mdi-unfold-less-horizontal")])
+                        : _c("v-icon", [_vm._v("mdi-unfold-more-horizontal")])
+                    ],
+                    1
+                  )
+                : _c(
+                    "v-col",
+                    { attrs: { cols: "10" } },
+                    [
+                      _c("v-progress-linear", {
+                        attrs: {
+                          color: "deep-purple accent-4",
+                          indeterminate: "",
+                          rounded: "",
+                          height: "6"
+                        }
+                      })
+                    ],
+                    1
+                  )
+            ],
             1
           )
         ],
         1
       ),
-      _vm._v(" "),
-      _c("MA-EMA-ADX-List", {
-        attrs: { by_MA_EMA_ADX: _vm.by_MA_EMA_ADX, sparkline: _vm.sparkline }
-      }),
       _vm._v(" "),
       _c(
-        "v-row",
+        "v-slide-y-reverse-transition",
         [
-          _c(
-            "v-app-bar",
-            { attrs: { dense: "", dark: "" } },
-            [_c("v-toolbar-title", [_vm._v("RSI - ADX")])],
-            1
-          )
+          _vm.recommendationView == "list" && _vm.section.RSI_MACD.display
+            ? _c("RSI-MACD-List", {
+                attrs: {
+                  by_RSI_MACD: _vm.by_RSI_MACD,
+                  sparkline: _vm.sparkline
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.recommendationView == "tile" && _vm.section.RSI_MACD.display
+            ? _c("RSI-MACD-Tile", {
+                attrs: {
+                  by_RSI_MACD: _vm.by_RSI_MACD,
+                  sparkline: _vm.sparkline
+                }
+              })
+            : _vm._e()
         ],
         1
-      ),
-      _vm._v(" "),
-      _vm.recommendationView == "list"
-        ? _c("RSI-ADX-List", {
-            attrs: { by_RSI_ADX: _vm.by_RSI_ADX, sparkline: _vm.sparkline }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.recommendationView == "tile"
-        ? _c("RSI-ADX-Tile", {
-            attrs: { by_RSI_ADX: _vm.by_RSI_ADX, sparkline: _vm.sparkline }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        [
-          _c(
-            "v-app-bar",
-            { attrs: { dense: "", dark: "" } },
-            [_c("v-toolbar-title", [_vm._v("RSI - MACD")])],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.recommendationView == "list"
-        ? _c("RSI-MACD-List", {
-            attrs: { by_rsi_macd: _vm.by_rsi_macd, sparkline: _vm.sparkline }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.recommendationView == "tile"
-        ? _c("RSI-MACD-Tile", {
-            attrs: { by_rsi_macd: _vm.by_rsi_macd, sparkline: _vm.sparkline }
-          })
-        : _vm._e()
+      )
     ],
     1
   )

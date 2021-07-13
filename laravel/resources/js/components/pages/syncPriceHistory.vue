@@ -120,7 +120,7 @@ export default {
       processingStocks: [],
       processedStocks: [],
       onHoldStocks: [],
-      atATime: 3,
+      atATime: 10,
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
@@ -163,32 +163,6 @@ export default {
       this.started = true;
 
       let startTime = new Date();
-      if (type == 3) {
-        axios.get("/api/merolagani/livePrice").then((response) => {
-          let endTime = new Date();
-          let timeForResponse = endTime - startTime;
-          this.timeTakenForEachResponse.push(timeForResponse);
-          this.processedStocks = this.processedStocks.concat(
-            this.processingStocks
-          );
-
-          this.currentSyncLog.total_synced = this.processedStocks.length;
-          this.currentSyncLog.total_time = this.totalTimeInSeconds;
-          this.currentSyncLog.operation_type = "update";
-
-          axios
-            .post("/api/createSyncLog", this.currentSyncLog)
-            .then((response) => {});
-
-          this.processingStocks = [];
-          this.processing = false;
-          this.dialog = false;
-
-          this.getLastSyncLog();
-        });
-
-        return;
-      }
 
       axios
         .get("/api/getAllStocks")
@@ -196,6 +170,33 @@ export default {
           this.stocks = response.data;
         })
         .finally(() => {
+          if (type == 3) {
+            this.processingStocks = this.stocks;
+            axios.get("/api/merolagani/livePrice").then((response) => {
+              let endTime = new Date();
+              let timeForResponse = endTime - startTime;
+              this.timeTakenForEachResponse.push(timeForResponse);
+              this.processedStocks = this.processedStocks.concat(
+                this.processingStocks
+              );
+
+              this.currentSyncLog.total_synced = this.processedStocks.length;
+              this.currentSyncLog.total_time = this.totalTimeInSeconds;
+              this.currentSyncLog.operation_type = "update";
+
+              axios
+                .post("/api/createSyncLog", this.currentSyncLog)
+                .then((response) => {});
+
+              this.processingStocks = [];
+              this.processing = false;
+              this.dialog = false;
+
+              this.getLastSyncLog();
+            });
+
+            return;
+          }
           this.startProcessing(0, this.atATime);
         });
     },

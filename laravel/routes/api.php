@@ -27,6 +27,7 @@ Route::post('/createSyncLog', [App\Http\Controllers\SyncLogController::class, 'c
 Route::post('/nepalipaisa/pricehistory', [App\Http\Controllers\NepaliPaisaApiController::class, 'getPriceHistory']);
 Route::get('/merolagani/livePrice', [App\Http\Controllers\MeroLaganiController::class, 'livePrice']);
 
-Route::get('/get_recommendations_by_rsi_n_adx', [App\Http\Controllers\TraderController::class, 'getRecommendationsByRsiNAdx']);
-Route::get('/get_recommendations_by_rsi_n_macd', [App\Http\Controllers\TraderController::class, 'getRecommendationsByRsiNMacd']);
-Route::get('/get_recommendations_by_ma_ema_adx', [App\Http\Controllers\TraderController::class, 'getRecommendationsByMaEmaAdx']);
+Route::get('/get_recommendations_by_rsi_n_adx/{till_date}', [App\Http\Controllers\TraderController::class, 'getRecommendationsByRsiNAdx']);
+Route::get('/get_recommendations_by_rsi_n_macd/{till_date}', [App\Http\Controllers\TraderController::class, 'getRecommendationsByRsiNMacd']);
+Route::get('/get_recommendations_by_ma_ema_adx/{till_date}', [App\Http\Controllers\TraderController::class, 'getRecommendationsByMaEmaAdx']);
+Route::get('/test', [App\Http\Controllers\TraderController::class, 'tenPeriosRSIBelowThirtyStrategy']);

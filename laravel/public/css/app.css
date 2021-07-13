@@ -22,3 +22,7 @@
 .serial-no {
   width: 2%;
 }
+
+.navigation-drawer-toggle:hover {
+  cursor: pointer;
+}
