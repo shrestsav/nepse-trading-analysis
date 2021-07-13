@@ -11,20 +11,6 @@ class NepaliPaisaApiController extends Controller
 {
     private $fromDate = '2021-07-04';
 
-    public function testho(Request $request){
-        $response = Http::withHeaders([
-                        'Content-Type' => 'application/json; charset=UTF-8'
-                    ])->post('https://nepalipaisa.com/Modules/CompanyProfile/webservices/CompanyService.asmx/GetCompanyPriceHistory', [
-                        'StockSymbol' => 'CIT',
-                        'FromDate' => $this->fromDate,
-                        'ToDate' => date('Y-m-d'),
-                        'Offset' => 1,
-                        'Limit' => 3000,
-                    ]);
-
-        return ($response->json());
-    }
-
     public function priceHistory($symbol){
         $history = Http::withHeaders([
                         'Content-Type' => 'application/json; charset=UTF-8'

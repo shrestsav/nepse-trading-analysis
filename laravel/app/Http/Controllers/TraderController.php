@@ -301,49 +301,6 @@ class TraderController extends Controller
         // ];
         // return $result;
 
-        $this->buyStocks = [];
-
-        $stocks = Stock::with([
-            'sector',
-            'priceHistory' => function ($query) {
-                $query->where('date', '>', $this->fromDate);
-            }
-        ])->where('symbol','NIL')->get();
         
-        foreach ($stocks as $key => $stock) {
-            $priceHistory = $stock->priceHistory;
-            
-            if (count($priceHistory) > 50 && !in_array($stock->sector->name,  $this->excludedStockTypes)) {
-                $high = array_reverse($priceHistory->pluck('max_price')->toArray());
-                $low = array_reverse($priceHistory->pluck('min_price')->toArray());
-                $close = array_reverse($priceHistory->pluck('closing_price')->toArray());
-
-                $adx = Trader::adx($high, $low, $close, 14);
-                $rsi = Trader::rsi($close, 14);
-
-                $reverse_adx = array_reverse($adx);
-                $reverse_rsi = array_reverse($rsi);
-
-                $adx_today = $reverse_adx[0];
-                $adx_yesterday = $reverse_adx[1];
-
-                $rsi_today = $reverse_rsi[0];
-                $rsi_yesterday = $reverse_rsi[1];
-
-               
-                $this->buyStocks[$stock->symbol] = [
-                    'stock' => [
-                        'company_name' => $stock->company_name,
-                        'symbol' => $stock->symbol,
-                    ],
-                    'close_today' => $stock->priceHistory()->first(),
-                    'reverse_RSI' => $reverse_rsi,
-                    'reverse_ADX' => $reverse_adx,
-                ];
-                
-            }
-        }
-
-        return response()->json($this->buyStocks);
     }
 }

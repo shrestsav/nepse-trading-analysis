@@ -126,9 +126,16 @@ RUN if [ ${INSTALL_GNUPG} = true ]; then \
       php -m | grep -q 'gnupg'; \
     fi
 
+###########################################################################
+# Trader:
+###########################################################################
 
-RUN pecl install trader; \           
-  docker-php-ext-enable trader;
+ARG INSTALL_TRADER=false
+
+RUN if [ ${INSTALL_TRADER} = true ]; then \
+      pecl install trader; \           
+      docker-php-ext-enable trader; \
+    fi
 
 ###########################################################################
 # SSH2:

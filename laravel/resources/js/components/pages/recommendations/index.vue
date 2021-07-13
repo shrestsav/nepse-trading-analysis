@@ -133,7 +133,7 @@ export default {
     let dateTime = new Date();
     let hour = dateTime.getHours();
 
-    if (hour >= 11 && hour <= 15)
+    if (hour >= 11 && hour <= 14)
       this.$store.commit("changeIsLiveMarket", true);
   },
   methods: {

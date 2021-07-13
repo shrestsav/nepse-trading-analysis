@@ -30,4 +30,3 @@ Route::get('/merolagani/livePrice', [App\Http\Controllers\MeroLaganiController::
 Route::get('/get_recommendations_by_rsi_n_adx/{till_date}', [App\Http\Controllers\TraderController::class, 'getRecommendationsByRsiNAdx']);
 Route::get('/get_recommendations_by_rsi_n_macd/{till_date}', [App\Http\Controllers\TraderController::class, 'getRecommendationsByRsiNMacd']);
 Route::get('/get_recommendations_by_ma_ema_adx/{till_date}', [App\Http\Controllers\TraderController::class, 'getRecommendationsByMaEmaAdx']);
-Route::get('/test', [App\Http\Controllers\TraderController::class, 'tenPeriosRSIBelowThirtyStrategy']);

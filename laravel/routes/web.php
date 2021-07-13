@@ -27,6 +27,4 @@ Route::get('/getPriceForCurrentDay', [App\Http\Controllers\NepseScrapingControll
 
 Route::get('/dailyPrice', [App\Http\Controllers\MeroLaganiController::class, 'dailyPrice']);
 
-Route::get('/trader', [App\Http\Controllers\TraderController::class, 'test']);
-
-Route::get('/testho', [App\Http\Controllers\NepaliPaisaApiController::class, 'testho']);
+Route::get('/tradertest', [App\Http\Controllers\TraderController::class, 'test']);

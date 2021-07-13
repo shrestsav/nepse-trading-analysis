@@ -2737,7 +2737,7 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
     this.initialize();
     var dateTime = new Date();
     var hour = dateTime.getHours();
-    if (hour >= 11 && hour <= 15) this.$store.commit("changeIsLiveMarket", true);
+    if (hour >= 11 && hour <= 14) this.$store.commit("changeIsLiveMarket", true);
   },
   methods: {
     initialize: function initialize() {
