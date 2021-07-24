@@ -1961,35 +1961,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {},
   data: function data() {
     return {
       miniNavigationDrawer: false,
       navigations: [{
-        path: "/dashboard/daily-recommendation",
-        title: "Recommendations",
-        icon: "trending-up"
+        path: '/dashboard/daily-recommendation',
+        title: 'Recommendations',
+        icon: 'trending-up'
       }, {
-        path: "/dashboard/sync-price-history",
-        title: "Sync Price History",
-        icon: "cloud-sync"
+        path: '/dashboard/sync-price-history',
+        title: 'Sync Price History',
+        icon: 'cloud-sync'
       }],
       displayDatePicker: false
     };
   },
   mounted: function mounted() {
     if (localStorage.miniNavigationDrawer) {
-      this.miniNavigationDrawer = localStorage.miniNavigationDrawer == "true" ? true : false;
+      this.miniNavigationDrawer = localStorage.miniNavigationDrawer == 'true' ? true : false;
     }
   },
   methods: {
     changeRecommendationView: function changeRecommendationView(view) {
-      this.$store.commit("changeRecommendationView", view);
+      this.$store.commit('changeRecommendationView', view);
     },
     changeIsLiveMarket: function changeIsLiveMarket(bool) {
-      this.$store.commit("changeIsLiveMarket", bool || false);
+      this.$store.commit('changeIsLiveMarket', bool || false);
     },
     toggleNavigationDrawer: function toggleNavigationDrawer() {
       this.miniNavigationDrawer = !this.miniNavigationDrawer;
@@ -2011,7 +2010,7 @@ __webpack_require__.r(__webpack_exports__);
         return this.$store.state.forDateof;
       },
       set: function set(selectedDate) {
-        this.$store.commit("changeForDateof", selectedDate);
+        this.$store.commit('changeForDateof', selectedDate);
       }
     }
   }
@@ -39616,8 +39615,7 @@ var render = function() {
                                           false
                                         ),
                                         on
-                                      ),
-                                      [_vm._v("fsdf")]
+                                      )
                                     )
                                   ]
                                 }
@@ -39625,7 +39623,7 @@ var render = function() {
                             ],
                             null,
                             false,
-                            521673644
+                            4082637177
                           ),
                           model: {
                             value: _vm.displayDatePicker,

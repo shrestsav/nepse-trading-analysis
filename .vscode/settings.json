@@ -3,5 +3,14 @@
         "editor.formatOnSave": false
     },
     "vetur.format.defaultFormatter.js": "prettier-eslint",
-    "editor.formatOnSave": true
+    "vetur.format.options.tabSize": 2,
+    "editor.formatOnSave": true,
+    "vetur.format.defaultFormatterOptions": {
+        "prettier": {
+            "trailingComma": "es5",
+            "singleQuote": true,
+            "semi": false,
+            "htmlWhitespaceSensitivity": "ignore",
+        }
+    }
 }

@@ -78,8 +78,7 @@
                 v-bind="attrs"
                 v-on="on"
                 hide-details
-                >fsdf</v-text-field
-              >
+              ></v-text-field>
             </template>
             <v-date-picker
               v-model="forDateof"
@@ -123,55 +122,55 @@ export default {
       miniNavigationDrawer: false,
       navigations: [
         {
-          path: "/dashboard/daily-recommendation",
-          title: "Recommendations",
-          icon: "trending-up"
+          path: '/dashboard/daily-recommendation',
+          title: 'Recommendations',
+          icon: 'trending-up',
         },
         {
-          path: "/dashboard/sync-price-history",
-          title: "Sync Price History",
-          icon: "cloud-sync"
-        }
+          path: '/dashboard/sync-price-history',
+          title: 'Sync Price History',
+          icon: 'cloud-sync',
+        },
       ],
-      displayDatePicker: false
-    };
+      displayDatePicker: false,
+    }
   },
   mounted() {
     if (localStorage.miniNavigationDrawer) {
       this.miniNavigationDrawer =
-        localStorage.miniNavigationDrawer == "true" ? true : false;
+        localStorage.miniNavigationDrawer == 'true' ? true : false
     }
   },
   methods: {
     changeRecommendationView(view) {
-      this.$store.commit("changeRecommendationView", view);
+      this.$store.commit('changeRecommendationView', view)
     },
     changeIsLiveMarket(bool) {
-      this.$store.commit("changeIsLiveMarket", bool || false);
+      this.$store.commit('changeIsLiveMarket', bool || false)
     },
     toggleNavigationDrawer() {
-      this.miniNavigationDrawer = !this.miniNavigationDrawer;
-      localStorage.miniNavigationDrawer = this.miniNavigationDrawer;
-    }
+      this.miniNavigationDrawer = !this.miniNavigationDrawer
+      localStorage.miniNavigationDrawer = this.miniNavigationDrawer
+    },
   },
   computed: {
     recommendationView() {
-      return this.$store.state.recommendationView;
+      return this.$store.state.recommendationView
     },
     routeName() {
-      return this.$route.name;
+      return this.$route.name
     },
     isLiveMarket() {
-      return this.$store.state.isLiveMarket;
+      return this.$store.state.isLiveMarket
     },
     forDateof: {
       get: function() {
-        return this.$store.state.forDateof;
+        return this.$store.state.forDateof
       },
       set: function(selectedDate) {
-        this.$store.commit("changeForDateof", selectedDate);
-      }
-    }
-  }
-};
+        this.$store.commit('changeForDateof', selectedDate)
+      },
+    },
+  },
+}
 </script>
