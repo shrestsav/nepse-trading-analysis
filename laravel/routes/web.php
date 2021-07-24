@@ -27,6 +27,8 @@ Route::get('/getPriceForCurrentDay', [App\Http\Controllers\NepseScrapingControll
 
 Route::get('/dailyPrice', [App\Http\Controllers\MeroLaganiController::class, 'dailyPrice']);
 
+
+// Testing and Backtesting
 Route::get('/test1', [App\Http\Controllers\TraderController::class, 'test']);
 Route::get('/test2', [App\Http\Controllers\TraderController::class, 'tenPeriosRSIBelowThirtyStrategy']);
-Route::get('/scriptbacktesting', [App\Http\Controllers\TraderController::class, 'backTestsRSINADX']);
+Route::get('/scriptbacktesting/{strategy}', [App\Http\Controllers\BackTestingController::class, 'scriptsBackTesting']);

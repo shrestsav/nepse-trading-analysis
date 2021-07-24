@@ -1,7 +1,7 @@
 {
-    "editor.formatOnSave": true,
     "[dockerfile]": {
         "editor.formatOnSave": false
     },
-    "vetur.format.defaultFormatter.js": "prettier-eslint"
+    "vetur.format.defaultFormatter.js": "prettier-eslint",
+    "editor.formatOnSave": true
 }

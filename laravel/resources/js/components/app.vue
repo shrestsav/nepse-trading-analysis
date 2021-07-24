@@ -2,7 +2,10 @@
   <v-app>
     <v-navigation-drawer app :mini-variant="miniNavigationDrawer">
       <v-list-item>
-        <v-list-item-icon @click="toggleNavigationDrawer" class="navigation-drawer-toggle">
+        <v-list-item-icon
+          @click="toggleNavigationDrawer"
+          class="navigation-drawer-toggle"
+        >
           <v-icon v-if="miniNavigationDrawer" title="Expand Navigation Drawer">
             mdi-forwardburger
           </v-icon>
@@ -20,9 +23,13 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-for="(item, index) in navigations" :key="index" :to="item.path">
+        <v-list-item
+          v-for="(item, index) in navigations"
+          :key="index"
+          :to="item.path"
+        >
           <v-list-item-icon :title="miniNavigationDrawer ? item.title : ''">
-            <v-icon>mdi-{{item.icon}}</v-icon>
+            <v-icon>mdi-{{ item.icon }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title v-html="item.title"></v-list-item-title>
@@ -35,10 +42,18 @@
       <v-row align="center" v-if="routeName == 'recommendations'">
         <v-col cols="1">
           <v-btn-toggle :value="recommendationView" shaped mandatory>
-            <v-btn value="tile" @click="changeRecommendationView('tile')" elevation="24">
+            <v-btn
+              value="tile"
+              @click="changeRecommendationView('tile')"
+              elevation="24"
+            >
               <v-icon>mdi-view-module</v-icon>
             </v-btn>
-            <v-btn value="list" @click="changeRecommendationView('list')" elevation="24">
+            <v-btn
+              value="list"
+              @click="changeRecommendationView('list')"
+              elevation="24"
+            >
               <v-icon>mdi-format-list-bulleted-square</v-icon>
             </v-btn>
           </v-btn-toggle>
@@ -47,17 +62,42 @@
         <v-spacer></v-spacer>
 
         <v-col cols="2">
-          <v-menu v-model="displayDatePicker" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="auto">
+          <v-menu
+            v-model="displayDatePicker"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field v-model="forDateof" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on" hide-details></v-text-field>
+              <v-text-field
+                v-model="forDateof"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+                hide-details
+                >fsdf</v-text-field
+              >
             </template>
-            <v-date-picker v-model="forDateof" @input="displayDatePicker = false" landscape></v-date-picker>
+            <v-date-picker
+              v-model="forDateof"
+              @input="displayDatePicker = false"
+              landscape
+            ></v-date-picker>
           </v-menu>
         </v-col>
 
         <v-spacer></v-spacer>
 
-        <v-switch value :input-value="isLiveMarket" @change="changeIsLiveMarket" label="Live" hide-details></v-switch>
+        <v-switch
+          value
+          :input-value="isLiveMarket"
+          @change="changeIsLiveMarket"
+          label="Live"
+          hide-details
+        ></v-switch>
       </v-row>
     </v-app-bar>
     <v-main>

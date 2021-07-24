@@ -68,6 +68,8 @@ class NepseScrapingController extends Controller
     // Initialize Stocks data from scrape.json from merolagani.com
     public function initialize()
     {
+        $this->scrape();
+        
         $path = storage_path(). "/app/scrape.json";
         $stocks = json_decode(file_get_contents($path), true); 
 

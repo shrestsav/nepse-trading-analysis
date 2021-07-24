@@ -5,9 +5,12 @@
         <template v-slot:default>
           <thead>
             <tr>
+              <th class="text-left">S.No</th>
               <th class="text-left">Stock</th>
+              <th class="text-left">Traded Shares</th>
               <th class="text-left">Price on Day</th>
               <th class="text-left">Price Today</th>
+              <th class="text-left">Change</th>
               <th class="text-left">EMA High</th>
               <th class="text-left" width="12%"></th>
               <th class="text-left">ADX</th>
@@ -16,12 +19,17 @@
           </thead>
           <tbody>
             <tr v-for="(stock, i) in by_MA_EMA_ADX" :key="i">
+              <td>{{ i+1 }}</td>
               <td :title="stock.stock.company_name">{{ stock.stock.symbol }}</td>
+              <td :title="stock.close_on_day.traded_shares + ' out of ' + stock.close_on_day.total_quantity + ' traded'">{{ stock.traded_shares.toFixed(2) }} %</td>
               <td>
-                {{ stock.close_on_day }}
+                {{ stock.close_on_day.closing_price }}
               </td>
               <td>
                 {{ stock.close_today.closing_price }}
+              </td>
+              <td>
+                {{ (((stock.close_today.closing_price - stock.close_on_day.closing_price) / stock.close_on_day.closing_price) * 100).toFixed(2) }} %
               </td>
               <td>
                 <div class="font-weight-normal caption">
@@ -51,7 +59,7 @@
                   {{ stock.reverse_ADX[0] }}
                 </div>
               </td>
-              <td>{{ stock.adx_diff > 0 ? "+" : "-" }}</td>
+              <td>{{ stock.adx_diff > 0 ? "+" : "-" }} {{ stock.adx_diff.toFixed(2) }}</td>
             </tr>
           </tbody>
         </template>

@@ -150,11 +150,11 @@ export default {
         .get("/api/get_recommendations_by_ma_ema_adx/" + this.forDateof)
         .then(response => {
           let recommendations = response.data;
-          Object.keys(recommendations).forEach(symbol => {
-            let reverse_ADX = recommendations[symbol].reverse_ADX;
-            let reverse_EMA_high = recommendations[symbol].reverse_EMA_high;
-            let reverse_EMA_hlc3 = recommendations[symbol].reverse_EMA_hlc3;
-            let reverse_EMA_low = recommendations[symbol].reverse_EMA_low;
+          recommendations.forEach(stock => {
+            let reverse_ADX = stock.reverse_ADX;
+            let reverse_EMA_high = stock.reverse_EMA_high;
+            let reverse_EMA_hlc3 = stock.reverse_EMA_hlc3;
+            let reverse_EMA_low = stock.reverse_EMA_low;
 
             let ten_reverse_ADX = reverse_ADX.filter((a, i) => {
               return i >= 0 && i <= 15;
@@ -174,14 +174,18 @@ export default {
             let EMA_hlc3 = ten_reverse_EMA_hlc3.reverse();
             let EMA_low = ten_reverse_EMA_low.reverse();
 
-            recommendations[symbol].ADX = ADX;
-            recommendations[symbol].EMA_high = EMA_high;
-            recommendations[symbol].EMA_hlc3 = EMA_hlc3;
-            recommendations[symbol].EMA_low = EMA_low;
+            stock.traded_shares =
+              (stock.close_on_day.traded_shares /
+                stock.close_on_day.total_quantity) *
+              100;
+            stock.ADX = ADX;
+            stock.EMA_high = EMA_high;
+            stock.EMA_hlc3 = EMA_hlc3;
+            stock.EMA_low = EMA_low;
           });
 
           this.by_MA_EMA_ADX = recommendations.sort(
-            (a, b) => parseFloat(b.adx_diff) - parseFloat(a.adx_diff)
+            (a, b) => parseFloat(b.traded_shares) - parseFloat(a.traded_shares)
           );
 
           this.section.MA_EMA_ADX.loaded = true;
@@ -194,10 +198,11 @@ export default {
       axios
         .get("/api/get_recommendations_by_rsi_n_adx/" + this.forDateof)
         .then(response => {
-          let recommendations = response.data;
-          Object.keys(recommendations).forEach(symbol => {
-            let reverse_RSI = recommendations[symbol].reverse_RSI;
-            let reverse_ADX = recommendations[symbol].reverse_ADX;
+          let data = response.data;
+
+          data.buyRecommendations.forEach((stock, i) => {
+            let reverse_RSI = stock.reverse_RSI;
+            let reverse_ADX = stock.reverse_ADX;
 
             let ten_reverse_RSI = reverse_RSI.filter((a, i) => {
               return i >= 0 && i <= 15;
@@ -207,20 +212,20 @@ export default {
               return i >= 0 && i <= 15;
             });
 
-            recommendations[symbol].reverse_RSI = ten_reverse_RSI.map(n =>
+            data["buyRecommendations"][i].reverse_RSI = ten_reverse_RSI.map(n =>
               n.toFixed(2)
             );
-            recommendations[symbol].reverse_ADX = ten_reverse_ADX.map(n =>
+            data["buyRecommendations"][i].reverse_ADX = ten_reverse_ADX.map(n =>
               n.toFixed(2)
             );
 
             let RSI = ten_reverse_RSI.reverse();
             let ADX = ten_reverse_ADX.reverse();
 
-            recommendations[symbol].RSI = RSI;
-            recommendations[symbol].ADX = ADX;
+            data["buyRecommendations"][i].RSI = RSI;
+            data["buyRecommendations"][i].ADX = ADX;
           });
-          this.by_RSI_ADX = recommendations;
+          this.by_RSI_ADX = data;
 
           this.section.RSI_ADX.loaded = true;
         });

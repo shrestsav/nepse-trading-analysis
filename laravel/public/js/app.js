@@ -1922,6 +1922,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {},
   data: function data() {
@@ -2233,6 +2273,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RsiAdxList",
   components: {},
@@ -2317,6 +2365,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RsiAdxList",
   components: {},
@@ -2334,7 +2394,15 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   mounted: function mounted() {},
-  methods: {}
+  methods: {},
+  computed: {
+    buyRecommendations: function buyRecommendations() {
+      return this.by_RSI_ADX.buyRecommendations;
+    },
+    isSelectedForToday: function isSelectedForToday() {
+      return this.$store.state.forDateof == this.$moment().format("YYYY-MM-DD");
+    }
+  }
 });
 
 /***/ }),
@@ -2752,11 +2820,11 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
       this.section.MA_EMA_ADX.loaded = false;
       axios.get("/api/get_recommendations_by_ma_ema_adx/" + this.forDateof).then(function (response) {
         var recommendations = response.data;
-        Object.keys(recommendations).forEach(function (symbol) {
-          var reverse_ADX = recommendations[symbol].reverse_ADX;
-          var reverse_EMA_high = recommendations[symbol].reverse_EMA_high;
-          var reverse_EMA_hlc3 = recommendations[symbol].reverse_EMA_hlc3;
-          var reverse_EMA_low = recommendations[symbol].reverse_EMA_low;
+        recommendations.forEach(function (stock) {
+          var reverse_ADX = stock.reverse_ADX;
+          var reverse_EMA_high = stock.reverse_EMA_high;
+          var reverse_EMA_hlc3 = stock.reverse_EMA_hlc3;
+          var reverse_EMA_low = stock.reverse_EMA_low;
           var ten_reverse_ADX = reverse_ADX.filter(function (a, i) {
             return i >= 0 && i <= 15;
           });
@@ -2773,13 +2841,14 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
           var EMA_high = ten_reverse_EMA_high.reverse();
           var EMA_hlc3 = ten_reverse_EMA_hlc3.reverse();
           var EMA_low = ten_reverse_EMA_low.reverse();
-          recommendations[symbol].ADX = ADX;
-          recommendations[symbol].EMA_high = EMA_high;
-          recommendations[symbol].EMA_hlc3 = EMA_hlc3;
-          recommendations[symbol].EMA_low = EMA_low;
+          stock.traded_shares = stock.close_on_day.traded_shares / stock.close_on_day.total_quantity * 100;
+          stock.ADX = ADX;
+          stock.EMA_high = EMA_high;
+          stock.EMA_hlc3 = EMA_hlc3;
+          stock.EMA_low = EMA_low;
         });
         _this.by_MA_EMA_ADX = recommendations.sort(function (a, b) {
-          return parseFloat(b.adx_diff) - parseFloat(a.adx_diff);
+          return parseFloat(b.traded_shares) - parseFloat(a.traded_shares);
         });
         _this.section.MA_EMA_ADX.loaded = true;
       });
@@ -2790,28 +2859,28 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
       this.by_RSI_ADX = {};
       this.section.RSI_ADX.loaded = false;
       axios.get("/api/get_recommendations_by_rsi_n_adx/" + this.forDateof).then(function (response) {
-        var recommendations = response.data;
-        Object.keys(recommendations).forEach(function (symbol) {
-          var reverse_RSI = recommendations[symbol].reverse_RSI;
-          var reverse_ADX = recommendations[symbol].reverse_ADX;
+        var data = response.data;
+        data.buyRecommendations.forEach(function (stock, i) {
+          var reverse_RSI = stock.reverse_RSI;
+          var reverse_ADX = stock.reverse_ADX;
           var ten_reverse_RSI = reverse_RSI.filter(function (a, i) {
             return i >= 0 && i <= 15;
           });
           var ten_reverse_ADX = reverse_ADX.filter(function (a, i) {
             return i >= 0 && i <= 15;
           });
-          recommendations[symbol].reverse_RSI = ten_reverse_RSI.map(function (n) {
+          data["buyRecommendations"][i].reverse_RSI = ten_reverse_RSI.map(function (n) {
             return n.toFixed(2);
           });
-          recommendations[symbol].reverse_ADX = ten_reverse_ADX.map(function (n) {
+          data["buyRecommendations"][i].reverse_ADX = ten_reverse_ADX.map(function (n) {
             return n.toFixed(2);
           });
           var RSI = ten_reverse_RSI.reverse();
           var ADX = ten_reverse_ADX.reverse();
-          recommendations[symbol].RSI = RSI;
-          recommendations[symbol].ADX = ADX;
+          data["buyRecommendations"][i].RSI = RSI;
+          data["buyRecommendations"][i].ADX = ADX;
         });
-        _this2.by_RSI_ADX = recommendations;
+        _this2.by_RSI_ADX = data;
         _this2.section.RSI_ADX.loaded = true;
       });
     },
@@ -2996,7 +3065,7 @@ __webpack_require__.r(__webpack_exports__);
       processingStocks: [],
       processedStocks: [],
       onHoldStocks: [],
-      atATime: 10,
+      atATime: 2,
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
@@ -39547,7 +39616,8 @@ var render = function() {
                                           false
                                         ),
                                         on
-                                      )
+                                      ),
+                                      [_vm._v("fsdf")]
                                     )
                                   ]
                                 }
@@ -39555,7 +39625,7 @@ var render = function() {
                             ],
                             null,
                             false,
-                            4082637177
+                            521673644
                           ),
                           model: {
                             value: _vm.displayDatePicker,
@@ -39828,7 +39898,15 @@ var render = function() {
                     _c("thead", [
                       _c("tr", [
                         _c("th", { staticClass: "text-left" }, [
+                          _vm._v("S.No")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-left" }, [
                           _vm._v("Stock")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-left" }, [
+                          _vm._v("Traded Shares")
                         ]),
                         _vm._v(" "),
                         _c("th", { staticClass: "text-left" }, [
@@ -39837,6 +39915,10 @@ var render = function() {
                         _vm._v(" "),
                         _c("th", { staticClass: "text-left" }, [
                           _vm._v("Price Today")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-left" }, [
+                          _vm._v("Change")
                         ]),
                         _vm._v(" "),
                         _c("th", { staticClass: "text-left" }, [
@@ -39860,16 +39942,36 @@ var render = function() {
                       "tbody",
                       _vm._l(_vm.by_MA_EMA_ADX, function(stock, i) {
                         return _c("tr", { key: i }, [
+                          _c("td", [_vm._v(_vm._s(i + 1))]),
+                          _vm._v(" "),
                           _c(
                             "td",
                             { attrs: { title: stock.stock.company_name } },
                             [_vm._v(_vm._s(stock.stock.symbol))]
                           ),
                           _vm._v(" "),
+                          _c(
+                            "td",
+                            {
+                              attrs: {
+                                title:
+                                  stock.close_on_day.traded_shares +
+                                  " out of " +
+                                  stock.close_on_day.total_quantity +
+                                  " traded"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(stock.traded_shares.toFixed(2)) + " %"
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
                           _c("td", [
                             _vm._v(
                               "\n              " +
-                                _vm._s(stock.close_on_day) +
+                                _vm._s(stock.close_on_day.closing_price) +
                                 "\n            "
                             )
                           ]),
@@ -39879,6 +39981,21 @@ var render = function() {
                               "\n              " +
                                 _vm._s(stock.close_today.closing_price) +
                                 "\n            "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n              " +
+                                _vm._s(
+                                  (
+                                    ((stock.close_today.closing_price -
+                                      stock.close_on_day.closing_price) /
+                                      stock.close_on_day.closing_price) *
+                                    100
+                                  ).toFixed(2)
+                                ) +
+                                " %\n            "
                             )
                           ]),
                           _vm._v(" "),
@@ -39986,7 +40103,11 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", [
-                            _vm._v(_vm._s(stock.adx_diff > 0 ? "+" : "-"))
+                            _vm._v(
+                              _vm._s(stock.adx_diff > 0 ? "+" : "-") +
+                                " " +
+                                _vm._s(stock.adx_diff.toFixed(2))
+                            )
                           ])
                         ])
                       }),
@@ -40042,155 +40163,215 @@ var render = function() {
                 fn: function() {
                   return [
                     _c("thead", [
-                      _c("tr", [
-                        _c("th", { staticClass: "text-left" }, [
-                          _vm._v("Stock")
-                        ]),
-                        _vm._v(" "),
-                        _c("th", {
-                          staticClass: "text-left",
-                          attrs: { width: "12%" }
-                        }),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-left" }, [_vm._v("RSI")]),
-                        _vm._v(" "),
-                        _c("th", {
-                          staticClass: "text-left",
-                          attrs: { width: "12%" }
-                        }),
-                        _vm._v(" "),
-                        _c("th", { staticClass: "text-left" }, [_vm._v("ADX")])
-                      ])
+                      _c(
+                        "tr",
+                        [
+                          _c("th", { staticClass: "text-left" }, [
+                            _vm._v("S.No")
+                          ]),
+                          _vm._v(" "),
+                          _c("th", { staticClass: "text-left" }, [
+                            _vm._v("Stock")
+                          ]),
+                          _vm._v(" "),
+                          _c("th", { staticClass: "text-left" }, [
+                            _vm._v("Price on Day")
+                          ]),
+                          _vm._v(" "),
+                          !_vm.isSelectedForToday
+                            ? [
+                                _c("th", { staticClass: "text-left" }, [
+                                  _vm._v("Price Today")
+                                ]),
+                                _vm._v(" "),
+                                _c("th", { staticClass: "text-left" }, [
+                                  _vm._v("Change")
+                                ])
+                              ]
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("th", {
+                            staticClass: "text-left",
+                            attrs: { width: "12%" }
+                          }),
+                          _vm._v(" "),
+                          _c("th", { staticClass: "text-left" }, [
+                            _vm._v("RSI")
+                          ]),
+                          _vm._v(" "),
+                          _c("th", {
+                            staticClass: "text-left",
+                            attrs: { width: "12%" }
+                          }),
+                          _vm._v(" "),
+                          _c("th", { staticClass: "text-left" }, [
+                            _vm._v("ADX")
+                          ])
+                        ],
+                        2
+                      )
                     ]),
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.by_RSI_ADX, function(stock, symbol, i) {
-                        return _c("tr", { key: i }, [
-                          _c(
-                            "td",
-                            { attrs: { title: stock.stock.company_name } },
-                            [_vm._v(_vm._s(symbol))]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _c("v-sparkline", {
-                                attrs: {
-                                  value: stock.RSI,
-                                  gradient: _vm.sparkline.gradient,
-                                  smooth: _vm.sparkline.radius || false,
-                                  padding: _vm.sparkline.padding,
-                                  "line-width": _vm.sparkline.width,
-                                  "stroke-linecap": _vm.sparkline.lineCap,
-                                  "gradient-direction":
-                                    _vm.sparkline.gradientDirection,
-                                  fill: _vm.sparkline.fill,
-                                  type: _vm.sparkline.type,
-                                  "auto-line-width":
-                                    _vm.sparkline.autoLineWidth,
-                                  "auto-draw": ""
-                                }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("td", [
+                      _vm._l(_vm.buyRecommendations, function(stock, i) {
+                        return _c(
+                          "tr",
+                          { key: i },
+                          [
+                            _c("td", [_vm._v(_vm._s(i + 1))]),
+                            _vm._v(" "),
                             _c(
-                              "div",
-                              { staticClass: "font-weight-normal caption" },
+                              "td",
+                              { attrs: { title: stock.stock.company_name } },
+                              [_vm._v(_vm._s(stock.stock.symbol))]
+                            ),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(stock.close_on_day))]),
+                            _vm._v(" "),
+                            !_vm.isSelectedForToday
+                              ? [
+                                  _c("td", [
+                                    _vm._v(
+                                      _vm._s(stock.close_today.closing_price)
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      _vm._s(
+                                        (
+                                          ((stock.close_today.closing_price -
+                                            stock.close_on_day) /
+                                            stock.close_on_day) *
+                                          100
+                                        ).toFixed(2)
+                                      ) + " %"
+                                    )
+                                  ])
+                                ]
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c(
+                              "td",
                               [
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[2]) +
-                                    "\n                "
-                                ),
-                                stock.reverse_RSI[2] > stock.reverse_RSI[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[1]) +
-                                    "\n                "
-                                ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_RSI[0]) +
-                                    "\n              "
-                                )
+                                _c("v-sparkline", {
+                                  attrs: {
+                                    value: stock.RSI,
+                                    gradient: _vm.sparkline.gradient,
+                                    smooth: _vm.sparkline.radius || false,
+                                    padding: _vm.sparkline.padding,
+                                    "line-width": _vm.sparkline.width,
+                                    "stroke-linecap": _vm.sparkline.lineCap,
+                                    "gradient-direction":
+                                      _vm.sparkline.gradientDirection,
+                                    fill: _vm.sparkline.fill,
+                                    type: _vm.sparkline.type,
+                                    "auto-line-width":
+                                      _vm.sparkline.autoLineWidth,
+                                    "auto-draw": ""
+                                  }
+                                })
                               ],
                               1
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _c("v-sparkline", {
-                                attrs: {
-                                  value: stock.ADX,
-                                  gradient: _vm.sparkline.gradient,
-                                  smooth: _vm.sparkline.radius || false,
-                                  padding: _vm.sparkline.padding,
-                                  "line-width": _vm.sparkline.width,
-                                  "stroke-linecap": _vm.sparkline.lineCap,
-                                  "gradient-direction":
-                                    _vm.sparkline.gradientDirection,
-                                  fill: _vm.sparkline.fill,
-                                  type: _vm.sparkline.type,
-                                  "auto-line-width":
-                                    _vm.sparkline.autoLineWidth,
-                                  "auto-draw": ""
-                                }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("td", [
+                            ),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "font-weight-normal caption" },
+                                [
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(stock.reverse_RSI[2]) +
+                                      "\n                "
+                                  ),
+                                  stock.reverse_RSI[2] > stock.reverse_RSI[1]
+                                    ? _c("v-icon", [
+                                        _vm._v("mdi-arrow-bottom-right-thick")
+                                      ])
+                                    : _c("v-icon", [
+                                        _vm._v("mdi-arrow-top-right-thick")
+                                      ]),
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(stock.reverse_RSI[1]) +
+                                      "\n                "
+                                  ),
+                                  _c("v-icon", [
+                                    _vm._v("mdi-arrow-top-right-thick")
+                                  ]),
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(stock.reverse_RSI[0]) +
+                                      "\n              "
+                                  )
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
                             _c(
-                              "div",
-                              { staticClass: "font-weight-normal" },
+                              "td",
                               [
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_ADX[2]) +
-                                    "\n                "
-                                ),
-                                stock.reverse_ADX[2] > stock.reverse_ADX[1]
-                                  ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
-                                    ])
-                                  : _c("v-icon", [
-                                      _vm._v("mdi-arrow-top-right-thick")
-                                    ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_ADX[1]) +
-                                    "\n                "
-                                ),
-                                _c("v-icon", [
-                                  _vm._v("mdi-arrow-top-right-thick")
-                                ]),
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(stock.reverse_ADX[0]) +
-                                    "\n              "
-                                )
+                                _c("v-sparkline", {
+                                  attrs: {
+                                    value: stock.ADX,
+                                    gradient: _vm.sparkline.gradient,
+                                    smooth: _vm.sparkline.radius || false,
+                                    padding: _vm.sparkline.padding,
+                                    "line-width": _vm.sparkline.width,
+                                    "stroke-linecap": _vm.sparkline.lineCap,
+                                    "gradient-direction":
+                                      _vm.sparkline.gradientDirection,
+                                    fill: _vm.sparkline.fill,
+                                    type: _vm.sparkline.type,
+                                    "auto-line-width":
+                                      _vm.sparkline.autoLineWidth,
+                                    "auto-draw": ""
+                                  }
+                                })
                               ],
                               1
-                            )
-                          ])
-                        ])
+                            ),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "font-weight-normal" },
+                                [
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(stock.reverse_ADX[2]) +
+                                      "\n                "
+                                  ),
+                                  stock.reverse_ADX[2] > stock.reverse_ADX[1]
+                                    ? _c("v-icon", [
+                                        _vm._v("mdi-arrow-bottom-right-thick")
+                                      ])
+                                    : _c("v-icon", [
+                                        _vm._v("mdi-arrow-top-right-thick")
+                                      ]),
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(stock.reverse_ADX[1]) +
+                                      "\n                "
+                                  ),
+                                  _c("v-icon", [
+                                    _vm._v("mdi-arrow-top-right-thick")
+                                  ]),
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(stock.reverse_ADX[0]) +
+                                      "\n              "
+                                  )
+                                ],
+                                1
+                              )
+                            ])
+                          ],
+                          2
+                        )
                       }),
                       0
                     )
