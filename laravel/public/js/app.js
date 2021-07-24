@@ -2079,6 +2079,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2092,7 +2104,7 @@ __webpack_require__.r(__webpack_exports__);
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
-      totalTimeInSeconds: ""
+      totalTimeInSeconds: ''
     };
   },
   mounted: function mounted() {
@@ -2102,7 +2114,7 @@ __webpack_require__.r(__webpack_exports__);
     getLastSyncLog: function getLastSyncLog() {
       var _this = this;
 
-      axios.get("/getLastSyncLog").then(function (response) {
+      axios.get('/getLastSyncLog').then(function (response) {
         _this.lastSyncLog = response.data;
       });
     },
@@ -2111,14 +2123,14 @@ __webpack_require__.r(__webpack_exports__);
 
       var data = {
         type: 1,
-        operation_type: "create"
+        operation_type: 'create'
       };
-      axios.post("/createSyncLog", data).then(function (response) {
+      axios.post('/createSyncLog', data).then(function (response) {
         _this2.currentSyncLog = response.data;
       });
       this.processing = true;
       this.started = true;
-      axios.get("/getAllStocks").then(function (response) {
+      axios.get('/getAllStocks').then(function (response) {
         _this2.stocks = response.data;
       })["finally"](function () {
         _this2.startProcessing(0, _this2.atATime);
@@ -2141,7 +2153,7 @@ __webpack_require__.r(__webpack_exports__);
       var data = {
         symbols: symbols
       };
-      axios.post("/pricehistory", data).then(function (response) {
+      axios.post('/pricehistory', data).then(function (response) {
         var endTime = new Date();
         var timeForResponse = endTime - startTime;
 
@@ -2154,8 +2166,8 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           _this3.currentSyncLog.total_synced = _this3.processedStocks.length;
           _this3.currentSyncLog.total_time = _this3.totalTimeInSeconds;
-          _this3.currentSyncLog.operation_type = "update";
-          axios.post("/createSyncLog", _this3.currentSyncLog).then(function (response) {});
+          _this3.currentSyncLog.operation_type = 'update';
+          axios.post('/createSyncLog', _this3.currentSyncLog).then(function (response) {});
           _this3.processingStocks = [];
           _this3.processing = false;
         }
@@ -2178,9 +2190,9 @@ __webpack_require__.r(__webpack_exports__);
       var estimatedTimeInMilliSeconds = pendingRequests * this.averageTimeInMilliseconds;
       var estimatedTimeInSeconds = estimatedTimeInMilliSeconds / 1000;
       var estimatedTimeInMinutes = estimatedTimeInSeconds / 60;
-      var scale = estimatedTimeInSeconds > 60 ? " Minutes" : " Seconds";
+      var scale = estimatedTimeInSeconds > 60 ? ' Minutes' : ' Seconds';
       var result = estimatedTimeInSeconds > 60 ? estimatedTimeInMinutes : estimatedTimeInSeconds;
-      return estimatedTimeInMinutes ? Math.round(result) + scale : "Calculating Estimation Time";
+      return estimatedTimeInMinutes ? Math.round(result) + scale : 'Calculating Estimation Time';
     },
     progress: function progress() {
       var progress = this.processedStocksList.length / this.stocks.length * 100;
@@ -2191,7 +2203,7 @@ __webpack_require__.r(__webpack_exports__);
         return a + b;
       }, 0) / 1000;
       this.totalTimeInSeconds = totalTime;
-      var result = totalTime > 60 ? Math.round(totalTime / 60) + " Minutes" : Math.round(totalTime) + " Seconds";
+      var result = totalTime > 60 ? Math.round(totalTime / 60) + ' Minutes' : Math.round(totalTime) + ' Seconds';
       return result;
     }
   }
@@ -2280,8 +2292,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "RsiAdxList",
+  name: 'RsiAdxList',
   components: {},
   props: {
     by_MA_EMA_ADX: {
@@ -2376,8 +2434,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "RsiAdxList",
+  name: 'RsiAdxList',
   components: {},
   props: {
     by_RSI_ADX: {
@@ -2399,7 +2496,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.by_RSI_ADX.buyRecommendations;
     },
     isSelectedForToday: function isSelectedForToday() {
-      return this.$store.state.forDateof == this.$moment().format("YYYY-MM-DD");
+      return this.$store.state.forDateof == this.$moment().format('YYYY-MM-DD');
     }
   }
 });
@@ -2463,8 +2560,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "RsiAdxTile",
+  name: 'RsiAdxTile',
   components: {},
   props: {
     by_RSI_ADX: {
@@ -2483,7 +2597,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     companyName: function companyName(_companyName) {
       if (_companyName.length > 40) {
-        return _companyName.substring(0, 40) + " ...";
+        return _companyName.substring(0, 40) + ' ...';
       }
 
       return _companyName;
@@ -2555,8 +2669,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "RsiMacdList",
+  name: 'RsiMacdList',
   components: {},
   props: {
     by_RSI_MACD: {
@@ -2634,8 +2776,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "RsiAdxList",
+  name: 'RsiAdxList',
   components: {},
   props: {
     by_RSI_MACD: {
@@ -2654,7 +2823,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     companyName: function companyName(_companyName) {
       if (_companyName.length > 40) {
-        return _companyName.substring(0, 40) + " ...";
+        return _companyName.substring(0, 40) + ' ...';
       }
 
       return _companyName;
@@ -2751,7 +2920,60 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", "violet"], ["#00c6ff", "#F0F", "#FF0"], ["#f72047", "#ffd200", "#1feaea"]];
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var gradients = [['#222'], ['#42b3f4'], ['red', 'orange', 'yellow'], ['purple', 'violet'], ['#00c6ff', '#F0F', '#FF0'], ['#f72047', '#ffd200', '#1feaea']];
 
 
 
@@ -2771,12 +2993,12 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
         width: 2,
         radius: 10,
         padding: 8,
-        lineCap: "round",
+        lineCap: 'round',
         gradient: gradients[5],
-        gradientDirection: "top",
+        gradientDirection: 'top',
         gradients: gradients,
         fill: false,
-        type: "trend",
+        type: 'trend',
         autoLineWidth: false
       },
       loaded: false,
@@ -2804,7 +3026,7 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
     this.initialize();
     var dateTime = new Date();
     var hour = dateTime.getHours();
-    if (hour >= 11 && hour <= 14) this.$store.commit("changeIsLiveMarket", true);
+    if (hour >= 11 && hour <= 14) this.$store.commit('changeIsLiveMarket', true);
   },
   methods: {
     initialize: function initialize() {
@@ -2817,7 +3039,7 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
 
       this.by_MA_EMA_ADX = [];
       this.section.MA_EMA_ADX.loaded = false;
-      axios.get("/api/get_recommendations_by_ma_ema_adx/" + this.forDateof).then(function (response) {
+      axios.get('/api/get_recommendations_by_ma_ema_adx/' + this.forDateof).then(function (response) {
         var recommendations = response.data;
         recommendations.forEach(function (stock) {
           var reverse_ADX = stock.reverse_ADX;
@@ -2857,7 +3079,7 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
 
       this.by_RSI_ADX = {};
       this.section.RSI_ADX.loaded = false;
-      axios.get("/api/get_recommendations_by_rsi_n_adx/" + this.forDateof).then(function (response) {
+      axios.get('/api/get_recommendations_by_rsi_n_adx/' + this.forDateof).then(function (response) {
         var data = response.data;
         data.buyRecommendations.forEach(function (stock, i) {
           var reverse_RSI = stock.reverse_RSI;
@@ -2868,16 +3090,16 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
           var ten_reverse_ADX = reverse_ADX.filter(function (a, i) {
             return i >= 0 && i <= 15;
           });
-          data["buyRecommendations"][i].reverse_RSI = ten_reverse_RSI.map(function (n) {
+          data['buyRecommendations'][i].reverse_RSI = ten_reverse_RSI.map(function (n) {
             return n.toFixed(2);
           });
-          data["buyRecommendations"][i].reverse_ADX = ten_reverse_ADX.map(function (n) {
+          data['buyRecommendations'][i].reverse_ADX = ten_reverse_ADX.map(function (n) {
             return n.toFixed(2);
           });
           var RSI = ten_reverse_RSI.reverse();
           var ADX = ten_reverse_ADX.reverse();
-          data["buyRecommendations"][i].RSI = RSI;
-          data["buyRecommendations"][i].ADX = ADX;
+          data['buyRecommendations'][i].RSI = RSI;
+          data['buyRecommendations'][i].ADX = ADX;
         });
         _this2.by_RSI_ADX = data;
         _this2.section.RSI_ADX.loaded = true;
@@ -2888,7 +3110,7 @@ var gradients = [["#222"], ["#42b3f4"], ["red", "orange", "yellow"], ["purple", 
 
       this.by_RSI_MACD = [];
       this.section.RSI_MACD.loaded = false;
-      axios.get("/api/get_recommendations_by_rsi_n_macd/" + this.forDateof).then(function (response) {
+      axios.get('/api/get_recommendations_by_rsi_n_macd/' + this.forDateof).then(function (response) {
         var recommendations = response.data;
         Object.keys(recommendations).forEach(function (symbol) {
           var reverse_RSI = recommendations[symbol].reverse_RSI;
@@ -3054,6 +3276,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -3068,7 +3329,7 @@ __webpack_require__.r(__webpack_exports__);
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
-      totalTimeInSeconds: ""
+      totalTimeInSeconds: ''
     };
   },
   mounted: function mounted() {
@@ -3078,7 +3339,7 @@ __webpack_require__.r(__webpack_exports__);
     getLastSyncLog: function getLastSyncLog() {
       var _this = this;
 
-      axios.get("/api/getLastSyncLog").then(function (response) {
+      axios.get('/api/getLastSyncLog').then(function (response) {
         _this.lastSyncLog = response.data;
       });
     },
@@ -3090,7 +3351,7 @@ __webpack_require__.r(__webpack_exports__);
       this.onHoldStocks = [];
       this.timeTakenForEachResponse = [];
       this.currentSyncLog = {};
-      this.totalTimeInSeconds = "";
+      this.totalTimeInSeconds = '';
     },
     getAllStocks: function getAllStocks(type) {
       var _this2 = this;
@@ -3099,20 +3360,20 @@ __webpack_require__.r(__webpack_exports__);
 
       var data = {
         type: type,
-        operation_type: "create"
+        operation_type: 'create'
       };
-      axios.post("/api/createSyncLog", data).then(function (response) {
+      axios.post('/api/createSyncLog', data).then(function (response) {
         _this2.currentSyncLog = response.data;
       });
       this.processing = true;
       this.started = true;
       var startTime = new Date();
-      axios.get("/api/getAllStocks").then(function (response) {
+      axios.get('/api/getAllStocks').then(function (response) {
         _this2.stocks = response.data;
       })["finally"](function () {
         if (type == 3) {
           _this2.processingStocks = _this2.stocks;
-          axios.get("/api/merolagani/livePrice").then(function (response) {
+          axios.get('/api/merolagani/livePrice').then(function (response) {
             var endTime = new Date();
             var timeForResponse = endTime - startTime;
 
@@ -3121,8 +3382,8 @@ __webpack_require__.r(__webpack_exports__);
             _this2.processedStocks = _this2.processedStocks.concat(_this2.processingStocks);
             _this2.currentSyncLog.total_synced = _this2.processedStocks.length;
             _this2.currentSyncLog.total_time = _this2.totalTimeInSeconds;
-            _this2.currentSyncLog.operation_type = "update";
-            axios.post("/api/createSyncLog", _this2.currentSyncLog).then(function (response) {});
+            _this2.currentSyncLog.operation_type = 'update';
+            axios.post('/api/createSyncLog', _this2.currentSyncLog).then(function (response) {});
             _this2.processingStocks = [];
             _this2.processing = false;
             _this2.dialog = false;
@@ -3152,7 +3413,7 @@ __webpack_require__.r(__webpack_exports__);
       var data = {
         symbols: symbols
       };
-      axios.post("/api/nepalipaisa/pricehistory", data).then(function (response) {
+      axios.post('/api/nepalipaisa/pricehistory', data).then(function (response) {
         var endTime = new Date();
         var timeForResponse = endTime - startTime;
 
@@ -3165,8 +3426,8 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           _this3.currentSyncLog.total_synced = _this3.processedStocks.length;
           _this3.currentSyncLog.total_time = _this3.totalTimeInSeconds;
-          _this3.currentSyncLog.operation_type = "update";
-          axios.post("/api/createSyncLog", _this3.currentSyncLog).then(function (response) {});
+          _this3.currentSyncLog.operation_type = 'update';
+          axios.post('/api/createSyncLog', _this3.currentSyncLog).then(function (response) {});
           _this3.processingStocks = [];
           _this3.processing = false;
         }
@@ -3189,9 +3450,9 @@ __webpack_require__.r(__webpack_exports__);
       var estimatedTimeInMilliSeconds = pendingRequests * this.averageTimeInMilliseconds;
       var estimatedTimeInSeconds = estimatedTimeInMilliSeconds / 1000;
       var estimatedTimeInMinutes = estimatedTimeInSeconds / 60;
-      var scale = estimatedTimeInSeconds > 60 ? " Minutes" : " Seconds";
+      var scale = estimatedTimeInSeconds > 60 ? ' Minutes' : ' Seconds';
       var result = estimatedTimeInSeconds > 60 ? estimatedTimeInMinutes : estimatedTimeInSeconds;
-      return estimatedTimeInMinutes ? Math.round(result) + scale : "Calculating Estimation Time";
+      return estimatedTimeInMinutes ? Math.round(result) + scale : 'Calculating Estimation Time';
     },
     progress: function progress() {
       var progress = this.processedStocksList.length / this.stocks.length * 100;
@@ -3202,7 +3463,7 @@ __webpack_require__.r(__webpack_exports__);
         return a + b;
       }, 0) / 1000;
       this.totalTimeInSeconds = totalTime;
-      var result = totalTime > 60 ? Math.round(totalTime / 60) + " Minutes" : Math.round(totalTime) + " Seconds";
+      var result = totalTime > 60 ? Math.round(totalTime / 60) + ' Minutes' : Math.round(totalTime) + ' Seconds';
       return result;
     }
   }
@@ -39945,7 +40206,13 @@ var render = function() {
                           _c(
                             "td",
                             { attrs: { title: stock.stock.company_name } },
-                            [_vm._v(_vm._s(stock.stock.symbol))]
+                            [
+                              _vm._v(
+                                "\n              " +
+                                  _vm._s(stock.stock.symbol) +
+                                  "\n            "
+                              )
+                            ]
                           ),
                           _vm._v(" "),
                           _c(
@@ -39961,7 +40228,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                _vm._s(stock.traded_shares.toFixed(2)) + " %"
+                                "\n              " +
+                                  _vm._s(stock.traded_shares.toFixed(2)) +
+                                  " %\n            "
                               )
                             ]
                           ),
@@ -39993,7 +40262,7 @@ var render = function() {
                                     100
                                   ).toFixed(2)
                                 ) +
-                                " %\n            "
+                                "\n              %\n            "
                             )
                           ]),
                           _vm._v(" "),
@@ -40010,7 +40279,9 @@ var render = function() {
                                 stock.reverse_EMA_high[2] >
                                 stock.reverse_EMA_high[1]
                                   ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
+                                      _vm._v(
+                                        "\n                  mdi-arrow-bottom-right-thick\n                "
+                                      )
                                     ])
                                   : _c("v-icon", [
                                       _vm._v("mdi-arrow-top-right-thick")
@@ -40071,7 +40342,11 @@ var render = function() {
                                   "v-icon",
                                   [
                                     stock.reverse_ADX[2] > stock.reverse_ADX[1]
-                                      ? [_vm._v("mdi-arrow-bottom-right-thick")]
+                                      ? [
+                                          _vm._v(
+                                            "\n                    mdi-arrow-bottom-right-thick\n                  "
+                                          )
+                                        ]
                                       : [_vm._v("mdi-arrow-top-right-thick")]
                                   ],
                                   2
@@ -40085,7 +40360,11 @@ var render = function() {
                                   "v-icon",
                                   [
                                     stock.reverse_ADX[1] > stock.reverse_ADX[0]
-                                      ? [_vm._v("mdi-arrow-bottom-right-thick")]
+                                      ? [
+                                          _vm._v(
+                                            "\n                    mdi-arrow-bottom-right-thick\n                  "
+                                          )
+                                        ]
                                       : [_vm._v("mdi-arrow-top-right-thick")]
                                   ],
                                   2
@@ -40102,9 +40381,11 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", [
                             _vm._v(
-                              _vm._s(stock.adx_diff > 0 ? "+" : "-") +
-                                " " +
-                                _vm._s(stock.adx_diff.toFixed(2))
+                              "\n              " +
+                                _vm._s(stock.adx_diff > 0 ? "+" : "-") +
+                                "\n              " +
+                                _vm._s(stock.adx_diff.toFixed(2)) +
+                                "\n            "
                             )
                           ])
                         ])
@@ -40222,7 +40503,13 @@ var render = function() {
                             _c(
                               "td",
                               { attrs: { title: stock.stock.company_name } },
-                              [_vm._v(_vm._s(stock.stock.symbol))]
+                              [
+                                _vm._v(
+                                  "\n              " +
+                                    _vm._s(stock.stock.symbol) +
+                                    "\n            "
+                                )
+                              ]
                             ),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(stock.close_on_day))]),
@@ -40237,14 +40524,16 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("td", [
                                     _vm._v(
-                                      _vm._s(
-                                        (
-                                          ((stock.close_today.closing_price -
-                                            stock.close_on_day) /
-                                            stock.close_on_day) *
-                                          100
-                                        ).toFixed(2)
-                                      ) + " %"
+                                      "\n                " +
+                                        _vm._s(
+                                          (
+                                            ((stock.close_today.closing_price -
+                                              stock.close_on_day) /
+                                              stock.close_on_day) *
+                                            100
+                                          ).toFixed(2)
+                                        ) +
+                                        "\n                %\n              "
                                     )
                                   ])
                                 ]
@@ -40286,7 +40575,9 @@ var render = function() {
                                   ),
                                   stock.reverse_RSI[2] > stock.reverse_RSI[1]
                                     ? _c("v-icon", [
-                                        _vm._v("mdi-arrow-bottom-right-thick")
+                                        _vm._v(
+                                          "\n                  mdi-arrow-bottom-right-thick\n                "
+                                        )
                                       ])
                                     : _c("v-icon", [
                                         _vm._v("mdi-arrow-top-right-thick")
@@ -40345,7 +40636,9 @@ var render = function() {
                                   ),
                                   stock.reverse_ADX[2] > stock.reverse_ADX[1]
                                     ? _c("v-icon", [
-                                        _vm._v("mdi-arrow-bottom-right-thick")
+                                        _vm._v(
+                                          "\n                  mdi-arrow-bottom-right-thick\n                "
+                                        )
                                       ])
                                     : _c("v-icon", [
                                         _vm._v("mdi-arrow-top-right-thick")
@@ -40476,7 +40769,11 @@ var render = function() {
                         "\n          "
                     ),
                     stock.reverse_RSI[2] > stock.reverse_RSI[1]
-                      ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                      ? _c("v-icon", [
+                          _vm._v(
+                            "\n            mdi-arrow-bottom-right-thick\n          "
+                          )
+                        ])
                       : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
                     _vm._v(
                       "\n          " +
@@ -40504,7 +40801,11 @@ var render = function() {
                         "\n          "
                     ),
                     stock.reverse_ADX[2] > stock.reverse_ADX[1]
-                      ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                      ? _c("v-icon", [
+                          _vm._v(
+                            "\n            mdi-arrow-bottom-right-thick\n          "
+                          )
+                        ])
                       : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
                     _vm._v(
                       "\n          " +
@@ -40602,27 +40903,23 @@ var render = function() {
                           _c(
                             "td",
                             [
-                              _c(
-                                "v-sparkline",
-                                {
-                                  attrs: {
-                                    value: stock.RSI,
-                                    gradient: _vm.sparkline.gradient,
-                                    smooth: _vm.sparkline.radius || false,
-                                    padding: _vm.sparkline.padding,
-                                    "line-width": _vm.sparkline.width,
-                                    "stroke-linecap": _vm.sparkline.lineCap,
-                                    "gradient-direction":
-                                      _vm.sparkline.gradientDirection,
-                                    fill: _vm.sparkline.fill,
-                                    type: _vm.sparkline.type,
-                                    "auto-line-width":
-                                      _vm.sparkline.autoLineWidth,
-                                    "auto-draw": ""
-                                  }
-                                },
-                                [_vm._v("dasdas")]
-                              )
+                              _c("v-sparkline", {
+                                attrs: {
+                                  value: stock.RSI,
+                                  gradient: _vm.sparkline.gradient,
+                                  smooth: _vm.sparkline.radius || false,
+                                  padding: _vm.sparkline.padding,
+                                  "line-width": _vm.sparkline.width,
+                                  "stroke-linecap": _vm.sparkline.lineCap,
+                                  "gradient-direction":
+                                    _vm.sparkline.gradientDirection,
+                                  fill: _vm.sparkline.fill,
+                                  type: _vm.sparkline.type,
+                                  "auto-line-width":
+                                    _vm.sparkline.autoLineWidth,
+                                  "auto-draw": ""
+                                }
+                              })
                             ],
                             1
                           ),
@@ -40639,7 +40936,9 @@ var render = function() {
                                 ),
                                 stock.reverse_RSI[2] > stock.reverse_RSI[1]
                                   ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
+                                      _vm._v(
+                                        "\n                  mdi-arrow-bottom-right-thick\n                "
+                                      )
                                     ])
                                   : _c("v-icon", [
                                       _vm._v("mdi-arrow-top-right-thick")
@@ -40698,7 +40997,9 @@ var render = function() {
                                 ),
                                 stock.reverse_MACD[2] > stock.reverse_MACD[1]
                                   ? _c("v-icon", [
-                                      _vm._v("mdi-arrow-bottom-right-thick")
+                                      _vm._v(
+                                        "\n                  mdi-arrow-bottom-right-thick\n                "
+                                      )
                                     ])
                                   : _c("v-icon", [
                                       _vm._v("mdi-arrow-top-right-thick")
@@ -40828,7 +41129,11 @@ var render = function() {
                           "\n            "
                       ),
                       stock.reverse_RSI[2] > stock.reverse_RSI[1]
-                        ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                        ? _c("v-icon", [
+                            _vm._v(
+                              "\n              mdi-arrow-bottom-right-thick\n            "
+                            )
+                          ])
                         : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
                       _vm._v(
                         "\n            " +
@@ -40858,7 +41163,11 @@ var render = function() {
                           "\n            "
                       ),
                       stock.reverse_MACD[2] > stock.reverse_MACD[1]
-                        ? _c("v-icon", [_vm._v("mdi-arrow-bottom-right-thick")])
+                        ? _c("v-icon", [
+                            _vm._v(
+                              "\n              mdi-arrow-bottom-right-thick\n            "
+                            )
+                          ])
                         : _c("v-icon", [_vm._v("mdi-arrow-top-right-thick")]),
                       _vm._v(
                         "\n            " +
@@ -40938,7 +41247,11 @@ var render = function() {
                     },
                     [
                       _vm.section.MA_EMA_ADX.display
-                        ? _c("v-icon", [_vm._v("mdi-unfold-less-horizontal")])
+                        ? _c("v-icon", [
+                            _vm._v(
+                              "\n          mdi-unfold-less-horizontal\n        "
+                            )
+                          ])
                         : _c("v-icon", [_vm._v("mdi-unfold-more-horizontal")])
                     ],
                     1
@@ -41012,7 +41325,11 @@ var render = function() {
                     },
                     [
                       _vm.section.RSI_ADX.display
-                        ? _c("v-icon", [_vm._v("mdi-unfold-less-horizontal")])
+                        ? _c("v-icon", [
+                            _vm._v(
+                              "\n          mdi-unfold-less-horizontal\n        "
+                            )
+                          ])
                         : _c("v-icon", [_vm._v("mdi-unfold-more-horizontal")])
                     ],
                     1
@@ -41082,7 +41399,11 @@ var render = function() {
                     },
                     [
                       _vm.section.RSI_MACD.display
-                        ? _c("v-icon", [_vm._v("mdi-unfold-less-horizontal")])
+                        ? _c("v-icon", [
+                            _vm._v(
+                              "\n          mdi-unfold-less-horizontal\n        "
+                            )
+                          ])
                         : _c("v-icon", [_vm._v("mdi-unfold-more-horizontal")])
                     ],
                     1
@@ -41206,7 +41527,7 @@ var render = function() {
                             _c("v-icon", { attrs: { left: "" } }, [
                               _vm._v("mdi-server-plus")
                             ]),
-                            _vm._v(" LIVE\n            ")
+                            _vm._v("\n              LIVE\n            ")
                           ],
                           1
                         ),
@@ -41226,7 +41547,7 @@ var render = function() {
                             _c("v-icon", { attrs: { left: "" } }, [
                               _vm._v("mdi-server-plus")
                             ]),
-                            _vm._v(" SMART\n            ")
+                            _vm._v("\n              SMART\n            ")
                           ],
                           1
                         ),
@@ -41246,7 +41567,7 @@ var render = function() {
                             _c("v-icon", { attrs: { left: "" } }, [
                               _vm._v("mdi-server-plus")
                             ]),
-                            _vm._v(" ALL TIME\n            ")
+                            _vm._v("\n              ALL TIME\n            ")
                           ],
                           1
                         )
@@ -41314,7 +41635,7 @@ var render = function() {
                     "v-chip",
                     [
                       _c("v-icon", [_vm._v("mdi-clock")]),
-                      _vm._v("  \n        "),
+                      _vm._v("\n         \n        "),
                       _vm.processing
                         ? [
                             _vm._v(
@@ -41323,7 +41644,7 @@ var render = function() {
                                 "\n        "
                             )
                           ]
-                        : [_vm._v("Total Time: " + _vm._s(_vm.totalTime) + " ")]
+                        : [_vm._v("Total Time: " + _vm._s(_vm.totalTime))]
                     ],
                     2
                   )

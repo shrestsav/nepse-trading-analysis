@@ -21,8 +21,11 @@
           <td>{{ stock.symbol }}</td>
           <td>{{ stock.company_name }}</td>
           <td>
-            <v-progress-linear color="green" rounded value="100">
-            </v-progress-linear>
+            <v-progress-linear
+              color="green"
+              rounded
+              value="100"
+            ></v-progress-linear>
           </td>
         </tr>
         <tr v-for="(stock, i) in processingStocks" :key="stock.id">
@@ -30,7 +33,11 @@
           <td>{{ stock.symbol }}</td>
           <td>{{ stock.company_name }}</td>
           <td>
-            <v-progress-linear indeterminate rounded color="green"></v-progress-linear>
+            <v-progress-linear
+              indeterminate
+              rounded
+              color="green"
+            ></v-progress-linear>
           </td>
         </tr>
         <tr v-for="(stock, i) in onHoldStocks" :key="stock.id">
@@ -40,7 +47,12 @@
           <td>{{ stock.symbol }}</td>
           <td>{{ stock.company_name }}</td>
           <td>
-            <v-progress-linear color="orange darken-2" buffer-value="0" stream rounded></v-progress-linear>
+            <v-progress-linear
+              color="orange darken-2"
+              buffer-value="0"
+              stream
+              rounded
+            ></v-progress-linear>
           </td>
         </tr>
       </tbody>
@@ -62,122 +74,119 @@ export default {
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
-      totalTimeInSeconds: ""
-    };
+      totalTimeInSeconds: ''
+    }
   },
   mounted() {
-    this.getLastSyncLog();
+    this.getLastSyncLog()
   },
   methods: {
     getLastSyncLog() {
-      axios.get("/getLastSyncLog").then(response => {
-        this.lastSyncLog = response.data;
-      });
+      axios.get('/getLastSyncLog').then(response => {
+        this.lastSyncLog = response.data
+      })
     },
     getAllStocks() {
       let data = {
         type: 1,
-        operation_type: "create"
-      };
+        operation_type: 'create'
+      }
 
-      axios.post("/createSyncLog", data).then(response => {
-        this.currentSyncLog = response.data;
-      });
+      axios.post('/createSyncLog', data).then(response => {
+        this.currentSyncLog = response.data
+      })
 
-      this.processing = true;
-      this.started = true;
+      this.processing = true
+      this.started = true
 
       axios
-        .get("/getAllStocks")
+        .get('/getAllStocks')
         .then(response => {
-          this.stocks = response.data;
+          this.stocks = response.data
         })
         .finally(() => {
-          this.startProcessing(0, this.atATime);
-        });
+          this.startProcessing(0, this.atATime)
+        })
     },
     startProcessing(from, to) {
-      let startTime = new Date();
+      let startTime = new Date()
       this.processingStocks = this.stocks.filter((a, i) => {
-        return i >= from && i < to;
-      });
+        return i >= from && i < to
+      })
       this.onHoldStocks = this.stocks.filter((a, i) => {
-        return i >= to;
-      });
-      let symbols = [];
+        return i >= to
+      })
+      let symbols = []
       this.processingStocks.forEach(stock => {
-        symbols.push(stock.symbol);
-      });
+        symbols.push(stock.symbol)
+      })
       let data = {
         symbols: symbols
-      };
-      axios.post("/pricehistory", data).then(response => {
-        let endTime = new Date();
-        let timeForResponse = endTime - startTime;
-        this.timeTakenForEachResponse.push(timeForResponse);
+      }
+      axios.post('/pricehistory', data).then(response => {
+        let endTime = new Date()
+        let timeForResponse = endTime - startTime
+        this.timeTakenForEachResponse.push(timeForResponse)
         this.processedStocks = this.processedStocks.concat(
           this.processingStocks
-        );
+        )
         if (response && to < this.stocks.length) {
-          this.startProcessing(to, to + this.atATime);
+          this.startProcessing(to, to + this.atATime)
         } else {
-          this.currentSyncLog.total_synced = this.processedStocks.length;
-          this.currentSyncLog.total_time = this.totalTimeInSeconds;
-          this.currentSyncLog.operation_type = "update";
-          axios
-            .post("/createSyncLog", this.currentSyncLog)
-            .then(response => {});
-          this.processingStocks = [];
-          this.processing = false;
+          this.currentSyncLog.total_synced = this.processedStocks.length
+          this.currentSyncLog.total_time = this.totalTimeInSeconds
+          this.currentSyncLog.operation_type = 'update'
+          axios.post('/createSyncLog', this.currentSyncLog).then(response => {})
+          this.processingStocks = []
+          this.processing = false
         }
-      });
+      })
     }
   },
   computed: {
     processedStocksList() {
-      return this.processedStocks;
+      return this.processedStocks
     },
     averageTimeInMilliseconds() {
       let averageTimeInMilliseconds =
         this.timeTakenForEachResponse.reduce((a, b) => a + b, 0) /
-        this.timeTakenForEachResponse.length;
-      return averageTimeInMilliseconds;
+        this.timeTakenForEachResponse.length
+      return averageTimeInMilliseconds
     },
     estimatedTime() {
       // averageTimeInMilliseconds is based on atATime stocks so divide total pending stocks by atATime
       let pendingRequests =
-        (this.onHoldStocks.length + this.processingStocks.length) /
-        this.atATime;
+        (this.onHoldStocks.length + this.processingStocks.length) / this.atATime
       let estimatedTimeInMilliSeconds =
-        pendingRequests * this.averageTimeInMilliseconds;
-      let estimatedTimeInSeconds = estimatedTimeInMilliSeconds / 1000;
-      let estimatedTimeInMinutes = estimatedTimeInSeconds / 60;
-      let scale = estimatedTimeInSeconds > 60 ? " Minutes" : " Seconds";
+        pendingRequests * this.averageTimeInMilliseconds
+      let estimatedTimeInSeconds = estimatedTimeInMilliSeconds / 1000
+      let estimatedTimeInMinutes = estimatedTimeInSeconds / 60
+      let scale = estimatedTimeInSeconds > 60 ? ' Minutes' : ' Seconds'
       let result =
         estimatedTimeInSeconds > 60
           ? estimatedTimeInMinutes
-          : estimatedTimeInSeconds;
+          : estimatedTimeInSeconds
 
       return estimatedTimeInMinutes
         ? Math.round(result) + scale
-        : "Calculating Estimation Time";
+        : 'Calculating Estimation Time'
     },
     progress() {
       let progress =
-        (this.processedStocksList.length / this.stocks.length) * 100;
-      return progress;
+        (this.processedStocksList.length / this.stocks.length) * 100
+      return progress
     },
     totalTime() {
       let totalTime =
-        this.timeTakenForEachResponse.reduce((a, b) => a + b, 0) / 1000;
-      this.totalTimeInSeconds = totalTime;
+        this.timeTakenForEachResponse.reduce((a, b) => a + b, 0) / 1000
+      this.totalTimeInSeconds = totalTime
       let result =
         totalTime > 60
-          ? Math.round(totalTime / 60) + " Minutes"
-          : Math.round(totalTime) + " Seconds";
+          ? Math.round(totalTime / 60) + ' Minutes'
+          : Math.round(totalTime) + ' Seconds'
 
-      return result;
+      return result
     }
   }
-};
+}
 </script>

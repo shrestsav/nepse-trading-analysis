@@ -124,15 +124,15 @@ export default {
         {
           path: '/dashboard/daily-recommendation',
           title: 'Recommendations',
-          icon: 'trending-up',
+          icon: 'trending-up'
         },
         {
           path: '/dashboard/sync-price-history',
           title: 'Sync Price History',
-          icon: 'cloud-sync',
-        },
+          icon: 'cloud-sync'
+        }
       ],
-      displayDatePicker: false,
+      displayDatePicker: false
     }
   },
   mounted() {
@@ -151,7 +151,7 @@ export default {
     toggleNavigationDrawer() {
       this.miniNavigationDrawer = !this.miniNavigationDrawer
       localStorage.miniNavigationDrawer = this.miniNavigationDrawer
-    },
+    }
   },
   computed: {
     recommendationView() {
@@ -169,8 +169,8 @@ export default {
       },
       set: function(selectedDate) {
         this.$store.commit('changeForDateof', selectedDate)
-      },
-    },
-  },
+      }
+    }
+  }
 }
 </script>

@@ -1,16 +1,33 @@
 {
-    "[dockerfile]": {
-        "editor.formatOnSave": false
-    },
-    "vetur.format.defaultFormatter.js": "prettier-eslint",
-    "vetur.format.options.tabSize": 2,
-    "editor.formatOnSave": true,
-    "vetur.format.defaultFormatterOptions": {
-        "prettier": {
-            "trailingComma": "es5",
-            "singleQuote": true,
-            "semi": false,
-            "htmlWhitespaceSensitivity": "ignore",
-        }
+  "[dockerfile]": {
+    "editor.formatOnSave": false
+  },
+  "editor.formatOnSave": true,
+
+  // Format JS, scss, css files with prettier
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Format vue files with vetur
+  "[vue]": {
+    "editor.defaultFormatter": "octref.vetur"
+  },
+  
+  "vetur.format.options.tabSize": 2,
+  "vetur.format.options.useTabs": false,
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      // "trailingComma": "es5",
+      "singleQuote": true,
+      "semi": false,
+      "htmlWhitespaceSensitivity": "ignore"
     }
+  }
 }
