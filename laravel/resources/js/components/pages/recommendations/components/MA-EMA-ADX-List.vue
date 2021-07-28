@@ -47,8 +47,7 @@
                       stock.close_on_day.closing_price) *
                     100
                   ).toFixed(2)
-                }}
-                %
+                }}%
               </td>
               <td>
                 <div class="font-weight-normal caption">
