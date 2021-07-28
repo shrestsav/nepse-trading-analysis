@@ -62,8 +62,8 @@ class TraderController extends Controller
                 $RSI_yesterday = $reverse_RSI[1];
 
                 if (
-                    // $ADX_today > $ADX_yesterday &&
-                    // $RSI_today > $RSI_yesterday &&
+                    $ADX_today > $ADX_yesterday &&
+                    $RSI_today > $RSI_yesterday &&
                     // ($RSI_today - $RSI_yesterday) > 4 &&
                     $ADX_today > 23 &&
                     $ADX_today < 30 &&
