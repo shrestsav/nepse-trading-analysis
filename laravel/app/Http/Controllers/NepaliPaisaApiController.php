@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class NepaliPaisaApiController extends Controller
 {
-    private $fromDate = '2010-01-01';
+    private $fromDate = '2021-07-15';
 
     public function priceHistory($symbol){
         $history = Http::withHeaders([
