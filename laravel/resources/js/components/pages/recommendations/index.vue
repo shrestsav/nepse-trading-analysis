@@ -34,7 +34,7 @@
         :by_MA_EMA_ADX="by_MA_EMA_ADX"
         :sparkline="sparkline"
       >
-        fsdfsd
+        ddd
       </MA-EMA-ADX-List>
     </v-slide-y-reverse-transition>
 
