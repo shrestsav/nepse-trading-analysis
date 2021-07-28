@@ -4,15 +4,9 @@
       <thead>
         <tr>
           <th class="text-left serial-no">S.No</th>
-          <th class="text-left symbol-col">
-            Symbol
-          </th>
-          <th class="text-left stock-col">
-            Stock Name
-          </th>
-          <th class="text-left">
-            Progress
-          </th>
+          <th class="text-left symbol-col">Symbol</th>
+          <th class="text-left stock-col">Stock Name</th>
+          <th class="text-left">Progress</th>
         </tr>
       </thead>
       <tbody>
@@ -74,7 +68,7 @@ export default {
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
-      totalTimeInSeconds: ''
+      totalTimeInSeconds: '',
     }
   },
   mounted() {
@@ -82,17 +76,17 @@ export default {
   },
   methods: {
     getLastSyncLog() {
-      axios.get('/getLastSyncLog').then(response => {
+      axios.get('/getLastSyncLog').then((response) => {
         this.lastSyncLog = response.data
       })
     },
     getAllStocks() {
       let data = {
         type: 1,
-        operation_type: 'create'
+        operation_type: 'create',
       }
 
-      axios.post('/createSyncLog', data).then(response => {
+      axios.post('/createSyncLog', data).then((response) => {
         this.currentSyncLog = response.data
       })
 
@@ -101,7 +95,7 @@ export default {
 
       axios
         .get('/getAllStocks')
-        .then(response => {
+        .then((response) => {
           this.stocks = response.data
         })
         .finally(() => {
@@ -117,13 +111,13 @@ export default {
         return i >= to
       })
       let symbols = []
-      this.processingStocks.forEach(stock => {
+      this.processingStocks.forEach((stock) => {
         symbols.push(stock.symbol)
       })
       let data = {
-        symbols: symbols
+        symbols: symbols,
       }
-      axios.post('/pricehistory', data).then(response => {
+      axios.post('/pricehistory', data).then((response) => {
         let endTime = new Date()
         let timeForResponse = endTime - startTime
         this.timeTakenForEachResponse.push(timeForResponse)
@@ -136,12 +130,14 @@ export default {
           this.currentSyncLog.total_synced = this.processedStocks.length
           this.currentSyncLog.total_time = this.totalTimeInSeconds
           this.currentSyncLog.operation_type = 'update'
-          axios.post('/createSyncLog', this.currentSyncLog).then(response => {})
+          axios
+            .post('/createSyncLog', this.currentSyncLog)
+            .then((response) => {})
           this.processingStocks = []
           this.processing = false
         }
       })
-    }
+    },
   },
   computed: {
     processedStocksList() {
@@ -186,7 +182,7 @@ export default {
           : Math.round(totalTime) + ' Seconds'
 
       return result
-    }
-  }
+    },
+  },
 }
 </script>

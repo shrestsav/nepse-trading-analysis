@@ -77,7 +77,7 @@ export default {
   components: {},
   props: {
     by_RSI_MACD: { type: Object, required: true },
-    sparkline: { type: Object, required: true }
+    sparkline: { type: Object, required: true },
   },
   data() {
     return {}
@@ -89,7 +89,7 @@ export default {
         return companyName.substring(0, 40) + ' ...'
       }
       return companyName
-    }
-  }
+    },
+  },
 }
 </script>

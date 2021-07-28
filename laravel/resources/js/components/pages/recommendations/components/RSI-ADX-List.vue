@@ -65,6 +65,7 @@
                   {{ stock.reverse_RSI[0] }}
                 </div>
               </td>
+
               <td>
                 <v-sparkline
                   :value="stock.ADX"
@@ -106,7 +107,7 @@ export default {
   components: {},
   props: {
     by_RSI_ADX: { type: Object, required: true },
-    sparkline: { type: Object, required: true }
+    sparkline: { type: Object, required: true },
   },
   data() {
     return {}
@@ -119,7 +120,7 @@ export default {
     },
     isSelectedForToday() {
       return this.$store.state.forDateof == this.$moment().format('YYYY-MM-DD')
-    }
-  }
+    },
+  },
 }
 </script>

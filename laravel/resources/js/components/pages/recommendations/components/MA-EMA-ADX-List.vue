@@ -26,9 +26,9 @@
               <td
                 :title="
                   stock.close_on_day.traded_shares +
-                    ' out of ' +
-                    stock.close_on_day.total_quantity +
-                    ' traded'
+                  ' out of ' +
+                  stock.close_on_day.total_quantity +
+                  ' traded'
                 "
               >
                 {{ stock.traded_shares.toFixed(2) }} %
@@ -120,12 +120,12 @@ export default {
   components: {},
   props: {
     by_MA_EMA_ADX: { type: Array, required: true },
-    sparkline: { type: Object, required: true }
+    sparkline: { type: Object, required: true },
   },
   data() {
     return {}
   },
   mounted() {},
-  methods: {}
+  methods: {},
 }
 </script>

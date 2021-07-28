@@ -83,12 +83,12 @@ export default {
   components: {},
   props: {
     by_RSI_MACD: { type: Object, required: true },
-    sparkline: { type: Object, required: true }
+    sparkline: { type: Object, required: true },
   },
   data() {
     return {}
   },
   mounted() {},
-  methods: {}
+  methods: {},
 }
 </script>
