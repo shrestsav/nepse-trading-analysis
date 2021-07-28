@@ -4,6 +4,8 @@
   },
   "editor.formatOnSave": true,
 
+
+  
   // Format JS, scss, css files with prettier
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
