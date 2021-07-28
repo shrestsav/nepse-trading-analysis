@@ -3,9 +3,7 @@
     <v-row class="d-flex">
       <v-dialog v-model="dialog" persistent max-width="400">
         <v-card>
-          <v-card-title class="text-h5">
-            Choose Sync Preference
-          </v-card-title>
+          <v-card-title class="text-h5">Choose Sync Preferences</v-card-title>
           <v-card-text>
             <div class="text-center">
               <v-chip class="ma-2" color="primary" @click="getAllStocks(3)">
@@ -88,18 +86,10 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left serial-no">
-              S.No
-            </th>
-            <th class="text-left symbol-col">
-              Symbol
-            </th>
-            <th class="text-left stock-col">
-              Stock Name
-            </th>
-            <th class="text-left">
-              Progress
-            </th>
+            <th class="text-left serial-no">S.No</th>
+            <th class="text-left symbol-col">Symbol</th>
+            <th class="text-left stock-col">Stock Name</th>
+            <th class="text-left">Progress</th>
           </tr>
         </thead>
         <tbody>
@@ -163,7 +153,7 @@ export default {
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},
-      totalTimeInSeconds: ''
+      totalTimeInSeconds: '',
     }
   },
   mounted() {
@@ -171,7 +161,7 @@ export default {
   },
   methods: {
     getLastSyncLog() {
-      axios.get('/api/getLastSyncLog').then(response => {
+      axios.get('/api/getLastSyncLog').then((response) => {
         this.lastSyncLog = response.data
       })
     },
@@ -191,10 +181,10 @@ export default {
       // Type 1 - All time, 2 - Smart, 3 - Live
       let data = {
         type: type,
-        operation_type: 'create'
+        operation_type: 'create',
       }
 
-      axios.post('/api/createSyncLog', data).then(response => {
+      axios.post('/api/createSyncLog', data).then((response) => {
         this.currentSyncLog = response.data
       })
 
@@ -205,13 +195,13 @@ export default {
 
       axios
         .get('/api/getAllStocks')
-        .then(response => {
+        .then((response) => {
           this.stocks = response.data
         })
         .finally(() => {
           if (type == 3) {
             this.processingStocks = this.stocks
-            axios.get('/api/merolagani/livePrice').then(response => {
+            axios.get('/api/merolagani/livePrice').then((response) => {
               let endTime = new Date()
               let timeForResponse = endTime - startTime
               this.timeTakenForEachResponse.push(timeForResponse)
@@ -225,7 +215,7 @@ export default {
 
               axios
                 .post('/api/createSyncLog', this.currentSyncLog)
-                .then(response => {})
+                .then((response) => {})
 
               this.processingStocks = []
               this.processing = false
@@ -248,13 +238,13 @@ export default {
         return i >= to
       })
       let symbols = []
-      this.processingStocks.forEach(stock => {
+      this.processingStocks.forEach((stock) => {
         symbols.push(stock.symbol)
       })
       let data = {
-        symbols: symbols
+        symbols: symbols,
       }
-      axios.post('/api/nepalipaisa/pricehistory', data).then(response => {
+      axios.post('/api/nepalipaisa/pricehistory', data).then((response) => {
         let endTime = new Date()
         let timeForResponse = endTime - startTime
         this.timeTakenForEachResponse.push(timeForResponse)
@@ -269,12 +259,12 @@ export default {
           this.currentSyncLog.operation_type = 'update'
           axios
             .post('/api/createSyncLog', this.currentSyncLog)
-            .then(response => {})
+            .then((response) => {})
           this.processingStocks = []
           this.processing = false
         }
       })
-    }
+    },
   },
   computed: {
     processedStocksList() {
@@ -319,7 +309,7 @@ export default {
           : Math.round(totalTime) + ' Seconds'
 
       return result
-    }
-  }
+    },
+  },
 }
 </script>
