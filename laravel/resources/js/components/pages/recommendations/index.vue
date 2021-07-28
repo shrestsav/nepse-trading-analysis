@@ -33,9 +33,7 @@
         v-show="section.MA_EMA_ADX.display"
         :by_MA_EMA_ADX="by_MA_EMA_ADX"
         :sparkline="sparkline"
-      >
-        ddd
-      </MA-EMA-ADX-List>
+      ></MA-EMA-ADX-List>
     </v-slide-y-reverse-transition>
 
     <v-row v-bind:class="{ 'mb-2': !section.RSI_ADX.display }">
