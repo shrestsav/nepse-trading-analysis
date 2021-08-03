@@ -170,7 +170,7 @@ export default {
         },
         RSI_MACD: {
           display: false,
-          loaded: false,
+          loaded: true,
         },
         MA_EMA_ADX: {
           display: false,
@@ -192,7 +192,7 @@ export default {
     initialize() {
       this.getRecommendationsByMaEmaAdx()
       this.getRecommendationsByRsiNAdx()
-      this.getRecommendationsByRsiNMacd()
+      // this.getRecommendationsByRsiNMacd()
     },
     getRecommendationsByMaEmaAdx() {
       this.by_MA_EMA_ADX = []

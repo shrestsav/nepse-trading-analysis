@@ -149,7 +149,7 @@ export default {
       processingStocks: [],
       processedStocks: [],
       onHoldStocks: [],
-      atATime: 5,
+      atATime: 20,
       timeTakenForEachResponse: [],
       lastSyncLog: {},
       currentSyncLog: {},

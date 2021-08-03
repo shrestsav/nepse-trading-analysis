@@ -22,8 +22,8 @@ class BackTestingController extends Controller
     {
         ScriptBackTesting::truncate();
         
-        $startDateStr = '2020-01-01';
-        $tillDateStr = '2021-07-30';
+        $startDateStr = '2021-07-01';
+        $tillDateStr = date('Y-m-d');
         $startDate = Carbon::createFromFormat('Y-m-d', $startDateStr);
         $priceHistoryFrom = Carbon::createFromFormat('Y-m-d', $startDateStr)->subDays(200);
         
@@ -297,6 +297,7 @@ class BackTestingController extends Controller
         }
 
         return [
+            'total_trades' =>  count($calculate),
             'wins'         =>  $wins,
             'profit_rate'  =>  $wins ? round(($win_rate/$wins)*100, 2) . " %" : 0,
             'loss'         =>  $loss,

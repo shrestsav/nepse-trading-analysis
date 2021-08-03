@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <th class="text-left">S.No</th>
-              <th class="text-left">Stock</th>
+              <th class="text-left">Stocks</th>
               <th class="text-left">Traded Shares</th>
               <th class="text-left">Price on Day</th>
               <th class="text-left">Price Today</th>

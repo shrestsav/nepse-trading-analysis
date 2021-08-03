@@ -49,19 +49,25 @@ class TraderController extends Controller
                 
                 $ADX = Trader::adx($high, $low, $close, 14);
                 $RSI = Trader::rsi($close, 14);
+                $ADX_5 = Trader::adx($high, $low, $close, 5);
 
                 $reverse_ADX = array_reverse($ADX);
+                $reverse_ADX_5 = array_reverse($ADX_5);
                 $reverse_RSI = array_reverse($RSI);
 
                 $close_on_day = $close[count($close)-1];
 
                 $ADX_today = $reverse_ADX[0];
                 $ADX_yesterday = $reverse_ADX[1];
+                
+                $ADX_5_today = $reverse_ADX_5[0];
+                $ADX_5_yesterday = $reverse_ADX_5[1];
 
                 $RSI_today = $reverse_RSI[0];
                 $RSI_yesterday = $reverse_RSI[1];
 
                 if (
+                    // $ADX_5_today > $ADX_5_yesterday &&
                     $ADX_today > $ADX_yesterday &&
                     $RSI_today > $RSI_yesterday &&
                     // ($RSI_today - $RSI_yesterday) > 4 &&
@@ -76,7 +82,7 @@ class TraderController extends Controller
                             'company_name' => $stock->company_name,
                             'symbol'       => $stock->symbol,
                         ],
-                        'close_on_day'     => $close_on_day,
+                        'close_on_day'     => $stock->priceHistory()->where('date', $tillDate)->first(),
                         'close_today'      => $stock->priceHistory()->first(),
                         'stop_loss'        => 0,
                         'reverse_RSI'      => $reverse_RSI,
