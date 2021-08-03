@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <th class="text-left">S.No</th>
-              <th class="text-left">Stocks</th>
+              <th class="text-left">Stock</th>
               <th class="text-left">Traded Shares</th>
               <th class="text-left">Price on Day</th>
               <th class="text-left">Price Today</th>
@@ -33,12 +33,8 @@
               >
                 {{ stock.traded_shares.toFixed(2) }} %
               </td>
-              <td>
-                {{ stock.close_on_day.closing_price }}
-              </td>
-              <td>
-                {{ stock.close_today.closing_price }}
-              </td>
+              <td>{{ stock.close_on_day.closing_price }}</td>
+              <td>{{ stock.close_today.closing_price }}</td>
               <td>
                 {{
                   (
